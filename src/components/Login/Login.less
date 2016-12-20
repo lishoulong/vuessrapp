@@ -1,0 +1,94 @@
+@import "../common";
+
+@redColor : #ff472e;
+
+.login {
+	background-color: #eee;
+
+	&-title {
+		text-align: center;
+		padding: 80 * @px 0;
+
+		img {
+			width: 140 * @px;
+		}
+
+		p {
+			margin-top: 30 * @px;
+		}
+	}
+
+	&-form {
+		background-color: #fff;
+		padding: 0 30 * @px;
+
+		&-center {
+
+		}
+
+		&-row {
+			position: relative;
+			&:first-child {
+				border-bottom: 1px solid #ddd;
+			}
+		}
+
+		input {
+			padding: 30 * @px 0;
+			border: 0;
+			outline: 0;
+			width: 80%;
+			background-color: rgb(255, 255, 255);
+		}
+
+		.send {
+			position: absolute;
+			right: 0;
+			padding: 20 * @px;
+			border-radius: 10 * @px;
+			margin-top: 10 * @px;
+		}
+
+
+
+		i.phone {
+			vertical-align: middle;
+			background: url(//img.58cdn.com.cn/zhuanzhuanftp/zz/trade/img/icons.png) no-repeat;
+			background-size: 26px 17px;
+			width: 12px;
+			height: 17px;
+			display: inline-block;
+		}
+
+		i.lock {
+			vertical-align: middle;
+			background: url(//img.58cdn.com.cn/zhuanzhuanftp/zz/trade/img/icons.png) -14px 0 no-repeat;
+			background-size: 26px 17px;
+			width: 12px;
+			height: 15px;
+			display: inline-block;
+		}
+	}
+
+	&-submit {
+		text-align: center;
+		button {
+			/* width: 160 * @px; */
+			margin-top: 60 * @px;
+			padding: 30 * @px;
+			background-color: #c8c8c8;
+			color: #fff;
+			border-radius: 10 * @px;
+		}
+	}
+
+	.active {
+		background-color: @redColor;
+		color: #fff;
+	}
+
+	.timing{
+		background-color: #eee;
+		color: #000;
+	}
+}

@@ -1,0 +1,43 @@
+@import '../common';
+
+
+
+
+.help{
+	background: #fff;
+	.pa(); .top(0); .bottom(0); .left(0); .right(0);
+	&-wrap{
+		.bgc(white);
+	}
+}
+.help-entrance{
+	background: #eee;
+	ul{
+		margin: 30 * @px auto 0;
+		list-style: none;
+		background-color: #fff;
+		color: #333;
+		font-size: 28 * @px;
+		line-height: 96 * @px;
+		li{
+			margin: 0 30 * @px;
+			border-bottom: #ebeae8 solid 1px;
+			position: relative;
+		}
+		li:last-of-type{
+			border-bottom: none;
+		}
+		i{
+			border-bottom:1px solid #676767;
+			border-left:1px solid #676767;
+			width: 18 * @px;
+			height: 18 * @px;
+			display: inline-block;
+			-webkit-transform: rotate(-135deg);
+			transform: rotate(-135deg);
+			position: absolute;
+			bottom: 45 * @px;
+			right: 0;
+		}
+	}	
+}

@@ -1,0 +1,86 @@
+@import "../../common";
+
+
+@w: 345 * @px;
+
+.detail-recommend{
+	font-size: 28 * @px;
+	border-bottom :#eceae8 solid 30 * @px;
+	// border-top :#eceae8 solid 30 * @px;
+	// margin-bottom: 100 * @px;
+
+	h5{
+    font-size: 30 * @px;
+		margin: 30 * @px 0;
+		color: #333333;
+		padding-left: 26 * @px;
+		border-left: 4 * @px solid #fc4938;
+	}
+
+	ul{
+		list-style: none;
+		margin-left: @pd20;
+		overflow: hidden;
+	}
+
+}
+.detail-recommend-item{
+	display: inline-block;
+	position: relative;
+	width: @w;
+	//height: 400 * @px;
+	margin-right: 20 * @px;
+	margin-bottom: 40 * @px;
+	&-pic{
+		width: @w;
+		height: 260 * @px;
+		background-size: cover;
+    background-position: center;
+	}
+	&-distance{
+		position: absolute;
+		margin-top: -50 * @px;
+		color: #ccffff;
+		background: #ef6355;
+		border-radius: 10 * @px;
+		font-size: 28 * @px;
+		padding: 1 * @px 13 * @px;
+		font-family: PingFang-SC-Regular;
+		margin-left: 4 * @px;
+	}
+	&-title{
+		width: @w;
+		height: 33 * @px;
+		line-height: 40 * @px;
+		padding: 20 * @px 0 * @px 10 * @px;
+		color: #212121;
+		font-size: 28 * @px;
+		display: -webkit-box;
+		-webkit-box-orient: vertical;
+		-webkit-line-clamp: 1;
+		word-break: break-all;
+		overflow: hidden;
+	}
+	&-bottom{
+		width: @w;
+		height: 40 * @px;
+		line-height: 30 * @px;
+		.flexType();
+		margin-top: 10 * @px;
+		&-price{
+			color: #ff5746;
+			font-size: 22 * @px;
+			.flexNum(1);
+			.price{
+				font-size: 36 * @px;
+				padding: 0 6 * @px 0 0;
+			}
+		}
+		&-district{
+			.flexNum(1);
+			color: #aaaeb9;
+			font-size: 22 * @px;
+			text-align: right;
+		}
+	}
+}

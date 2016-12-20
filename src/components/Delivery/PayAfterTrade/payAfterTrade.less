@@ -1,0 +1,110 @@
+@import "../../common";
+@unit:2*@px;
+.after_pay{
+  .spec{
+    font-size:14 * @unit;
+    padding-top:12 * @unit;
+    padding-bottom:12 * @unit;
+  }
+  .trade-either{
+    background-color: rgb(255, 255, 255);
+    .payBefore{
+      height: 40 * @unit;
+      -webkit-align-items: center;
+      .flexType();
+      -webkit-box-orient:horizontal;
+      padding-top: 14 * @unit;
+      .backimg1{
+        vertical-align: middle;
+        margin-left:16 * @unit;
+        .flexNum(1);
+        .checkedPartImg{
+          background: url(../img/checkedPart.png) no-repeat;
+          background-size:14 * @unit 14 * @unit;
+          border:1px solid #fffefe;
+        }
+        img{
+          width:14 * @unit;
+          height:14 * @unit;
+        }
+      }
+      .BeforeOk{
+        vertical-align: middle;
+        .flexNum(9);
+        .flexType();
+        .logoimg1{
+          width:35 * @unit;
+          height:35 * @unit;
+          display:block;
+          padding-right:17 * @unit;
+        }
+        .payAfterWenan{
+          .flexNum(1);
+          p{
+            font-size: 14 * @unit;
+            line-height: 0.2046rem;
+            color: #aaaeb9;
+          }
+          p:nth-child(1){
+            font-size:16 * @unit;
+            color: #43474c;
+          }
+        }
+      }
+    }
+    .payAfter{
+      height: 40 * @unit;
+      -webkit-align-items: center;
+      .flexType();
+      -webkit-box-orient:horizontal;
+      margin-top: 14 * @unit;
+      padding: 14 * @unit 0;
+      border-top: 1px solid #ddd;
+      .backimg2{
+        margin-left: 16 * @unit;
+        .flexNum(1);
+        .checkedPartImg{
+          background: url(../img/checkedPart.png) no-repeat;
+          background-size:14 * @unit 14 * @unit;
+          border:1px solid #fffefe;
+        }
+        img{
+          width:14 * @unit;
+          height:14 * @unit;
+        }
+      }
+      .AfterOk{
+        .flexNum(9);
+        .flexType();
+        .logoimg2{
+          width:35 * @unit;
+          height:35 * @unit;
+          display:block;
+          padding-right:17 * @unit;
+        }
+        .payBeforeWenan{
+          .flexNum(1);
+          p{
+            font-size: 14 * @unit;
+            line-height: 0.2046rem;
+            color: #aaaeb9;
+          }
+          p:nth-child(1){
+            font-size:16 * @unit;
+            color: #43474c;
+          }
+        }
+      }
+    }
+  }
+}
+.payGrey{
+   background-color: gray;
+}
+.circleTap{
+  width:14 * @unit;
+  height:14 * @unit;
+  border-radius: 50%;
+  border:1px solid grey;
+  .flexType();
+}

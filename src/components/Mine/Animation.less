@@ -1,0 +1,11 @@
+@import "../common.less";
+
+.expand-transition{
+  transition: all .3s ease;
+  .opacity(100);
+  .h(20*@unit);
+}
+.expand-enter, .expand-leave{
+  .opacity(0);
+  .h(0);
+}

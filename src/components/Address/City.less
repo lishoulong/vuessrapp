@@ -1,0 +1,67 @@
+@import "../common";
+
+.city {
+	background-color: #fff;
+
+	.appear-transition {
+		transition : all 0.4s;
+		opacity: 1;
+	}
+	.appear-leave{
+		opacity : 0;
+	}
+
+	.city-word {
+		background-color: #9a9a9a;
+		padding: 10 * @px 30 * @px;
+		margin: 10 * @px 0;
+	}
+
+	.ciy-item-wrap {
+		padding: 0 30 * @px;
+	}
+
+	.ciy-item {
+		padding: 25 * @px 0;
+		font-size: 28 * @px;
+		border-bottom: 1 * @px solid #ddd;
+
+		&:last-child {
+			border-bottom : 0;
+		}
+	}
+
+	.select-city-index {
+		position: fixed;
+		top: 50%;
+	    right: 0;
+	    color: #349ef0;
+	    text-align: center;
+	    transform: translateY(-50%);
+	    -webkit-transform: translateY(-50%);
+	    user-select: none;
+
+	    font-size: 26 * @px;
+
+	    .index-word {
+	        padding: 2 * @px 0 2 * @px 10px;
+	    }
+	}
+
+	.screen-center {
+	    position: fixed;
+	    top: 50%;
+	    left: 50%;
+	    margin-left: -20 * @px;
+	    margin-top: -20 * @px;
+	    background-color: rgba(0,0,0,.5);
+	    color: #ddd;
+	    font-size: 40 * @px;
+	    text-align: center;
+	    width: 40 * @px;
+	    height: 40 * @px;
+	    border-radius: 10* @px;
+	    line-height: 40 * @px;
+	    padding: 5 * @px;
+	}
+}

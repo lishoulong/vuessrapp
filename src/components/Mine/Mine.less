@@ -1,0 +1,153 @@
+@import "../common.less";
+@unit: 2 * @px;
+
+.mine{
+  .pd(0);  .mg(0);
+  .message-wrap{
+    .bgc(white);  .pd(20 * @unit 0 15 * @unit);
+    .message-body{
+      .bgc(#fff);  .pd(.18rem 0);  .w(100%);  .tc();
+      a{ .disIB(); .c(inherit); }
+      li{
+        .pr();  .pd(62 * @unit 0 0 0);  .mg(0 17 * @unit);
+        .disIB();  .tc();  .w(57 * @unit); .f(12 * @unit);
+        .unread{
+          //.w(8 * @unit);  .h(8 * @unit);  .bgc(#ff472e);  .br(4 * @unit);
+          //.pa();  .top(2 * @unit);  .right(0);  .z(100);
+        }
+      }
+      li:after{
+        .w(57 * @unit);  .h(57 * @unit);  .disIB();  content:" ";
+        .bgimg("//img.58cdn.com.cn/zhuanzhuan/zz/trade/img/myzzico.png");  .bgsize(183 * @unit auto);
+        .pa();  .top(0 * @unit);  .left(0 * @unit);
+      }
+      li.message-chat:after{.bgpos(2 * @unit 1 * @unit);}
+      li.message-order:after{.bgpos(-58 * @unit 0 * @unit);}
+      li.message-system:after{.bgpos(-119 * @unit 0 * @unit);}
+      li .icon{
+        .w(8 * @unit);  .h(8 * @unit);  .br(8 * @unit);
+        .pa();  .top(0);  .right(0);  .bgc(#ff472e);  .z(2);
+      }
+    }
+  }
+
+  .all-orders{
+    .pd(10 * @unit 0);
+    .order-top-banner{
+      .pd(15 * @unit 15 * @unit 5 * @unit);  .lh(20 * @unit);  .f(14 * @unit);  .fw(700);   .z(1000);
+      .pf(); .top(0); .left(0);  .w(100%);  .bgc(@body-bg);  .shadow(0 0 5 * @unit #888);
+    }
+    .order{
+      dl{
+        .pd(5 * @unit 0 0);
+        dt{  .f(14 * @unit);  .fw(bold); .c(@word); .pd(0 15 * @unit);  }
+        dd{
+          .pd(10 * @unit);  .mg(5 * @unit 0 10 * @unit);  .bgc(white);  .f(14 * @unit);
+          .order-title{
+            .h(25 * @unit);
+            .status{.float-left();}
+            .zhijianicon{
+              .float-right();
+              .pd(0 0 0 5 * @unit);
+              img{
+                .w(20 * @unit);
+              }
+            }
+            .isPay{ .float-right();  .c(red);  .fw(bold); }
+          }
+          .order-content{
+            .b-top(1 * @unit solid #ddd);
+            .b-bottom(1 * @unit solid #ddd);
+            .pd(10 * @unit 0);
+            .icon{ .float-left(); .w(62 * @unit);  .h(62 * @unit); }
+            .iconImg{ .float-left(); .pr();  .w(62 * @unit);  .h(62 * @unit);  .bgcenter(); .bgpos(center); }
+            .order-detail{
+              .mg(0 0 0 77 * @unit);
+              .words{
+                .c(#999);  display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; word-break:break-all;
+                .fw(400); .lh(20*@unit); .h(40*@unit); overflow:hidden;
+              }
+              .price{ .pd(3* @unit 0 3 * @unit); }
+            }
+          }
+          .order-buttons{
+            .h(20 * @unit);  .pd(10 * @unit 0 * @unit 5 * @unit);
+            .button{
+              .float-right();  .disIB();  .lh(25 * @unit);  .bgc(#f8f8f8);
+              .br(5 * @unit); .f(13 * @unit);  .c(@word); .mg(0 0 0 10 * @unit); .w(90 * @unit);  .tc();
+            }
+          }
+        }
+      }
+    }
+    .order-footer{
+      .w(100%);  .tc();  .fw(bold);  .f(14 * @unit);  .pd(5 * @unit  0);
+    }
+  }
+
+  &-lead {
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+    left: 0;
+    background: rgba(71,71,71,.88);
+    color: #fff;
+    height: 120 * @px;
+    line-height: 120 * @px;
+
+    img {
+      width: 86 * @px;
+      height: 86 * @px;
+      vertical-align: middle;
+      margin-left: 20 * @px;
+    }
+
+    span {
+      font-size: 26 * @px;
+    }
+
+    &-wrap {
+      float: right;
+    }
+
+    &-btn {
+      background-color: #fff;
+      color: #F8411F;
+      padding: 10 * @px 20 * @px;
+      border-radius: 10 * @px;
+      font-size: 24 * @px;
+      margin-right: 20 * @px;
+
+    }
+
+    .close {
+      position: absolute;
+      display: inline-block;
+      width: 16px;
+      height: 15px;
+      overflow: hidden;
+      top: 0;
+      right: 0;
+      cursor: pointer;
+    }
+
+    .close::after, .close::before {
+        content: '';
+        position: absolute;
+        height: 1px;
+        width: 100%;
+        top: 50%;
+        left: 0;
+        margin-top: -1px;
+        background: #fff;
+    }
+
+    .close::before {
+        transform: rotate(45deg);
+    }
+
+    .close::after {
+        transform: rotate(-45deg);
+    }
+  }
+}

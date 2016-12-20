@@ -1,0 +1,23 @@
+@import "../../common.less";
+@unit: 2 * @px;
+
+.recommends{
+  .bgc(white);  .mg(20 * @unit 0);
+  dl{
+    .pd(10 * @unit 10 * @unit);  .bgc(white);
+    dt{  .f(14 * @unit);  .fw(bold); .c(@word); .pd(0 15 * @unit); .lh(40 * @unit);  .b-bottom(1 * @unit solid @body-bg)  }
+    dd{
+      .pd(10 * @unit 2% 0 * @unit 0);  .w(32%);  .h(auto);  .pr();  .disIB();
+      .icon{
+        .w(100%);  .h(95 * @unit); .pr();
+        img{  .w(100%);  .h(100%);   }
+        .price{ .pa();  .bottom(0);  .left(0);  .right(0); .t(right); .pd(5 * @unit); .bgc(black); .opacity(50); .c(white);  .f(12 * @unit); }
+      }
+      .title{
+        .c(@word);  .flexType(); -webkit-line-clamp:1; -webkit-box-orient:vertical; word-break:break-all;
+        .fw(400); .lh(20*@unit); .h(20*@unit); overflow:hidden;  .f(12 * @unit);   .pd(0 5 * @unit);
+      }
+    }
+    dd:nth-child(3n+1){ .pd(10 * @unit 0 0); }
+  }
+}

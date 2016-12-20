@@ -1,0 +1,50 @@
+@import "../../common.less";
+
+@unit: 2 * @px;
+@h: 40 * @unit;
+@download-h: 30 * @unit;
+@font: 14 * @unit;
+
+.wrap{
+  .pf();  .bottom(0);  .left(0);  .right(0);
+  .h(@h);  .bgc(rgba(0,0,0,0.5));  .pd(7 * @unit);
+
+  &-icon{
+    .float-left(); .w(@h);  .h(@h);
+    img{ .w(@h);  .h(@h); }
+  }
+  &-text{
+    .mg(0 0 0 50 * @unit);  .c(white);  .f(@font);  .lh(@h);
+  }
+  &-download{
+    .float-right(); .w(100 * @unit);  .h(@download-h);  .bgc(white);  .br(5 * @unit);
+    .mg(5 * @unit);  .tc();  .lh(@download-h);  .c(#F8411F);  .f(@font);
+  }
+  &-close{
+    .pa();  .top(2 * @unit);  .right(2 * @unit);  .c(#F8411F);
+    .f(18 * @unit);  .lh(15 * @unit);  .w(15 * @unit); .h(15 * @unit);
+    .tc();   .float-right();  .fw(600);
+  }
+  &-close:hover::before, &-close:hover::after {
+    .bgc(#1ebcc5);
+  }
+  &-close::before, &-close::after {
+    content: '';   margin-top: -1px;
+    .pa();  .h(1px);  .w(100%);
+    .top(50%);  .left(0%);  .bgc(white);
+  }
+  &-close::before {
+    -webkit-transform: rotate(45deg);
+    -moz-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    -o-transform: rotate(45deg);
+    transform: rotate(45deg);
+  }
+  &-close::after {
+    -webkit-transform: rotate(-45deg);
+    -moz-transform: rotate(-45deg);
+    -ms-transform: rotate(-45deg);
+    -o-transform: rotate(-45deg);
+    transform: rotate(-45deg);
+  }
+}

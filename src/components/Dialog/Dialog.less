@@ -1,0 +1,52 @@
+@import "../common.less";
+
+@unit: 2 * @px;
+
+.chat-dialog{
+  .pa();  .top(0);  .bottom(0);   .left(0);   .right(0);
+  .bgc(#F1F2F6);  display: flex;  flex-direction: column;
+
+  a{ .disB();}
+  &-goods{
+    .pa();  .top(0);  .left(0);  .w(94%);  .pd(3%);  .bgc(white);
+
+    &-icon{
+      .float-left();  .w(60 * @unit);  .h(60 * @unit);
+      img{ .w(100%); .h(100%);  }
+    }
+
+    &-text{
+      .mg(0 0 0 70 * @unit);
+      .title{
+        .f(16 * @unit);  .fw(bold);  .c(#555);   .w(80%); .pd(3 * @unit 0 );  .ff("Arial");
+        white-space:nowrap;  overflow:hidden;  text-overflow:ellipsis;
+      }
+      .price{ .f(16 * @unit);  .c(#E6454A);  .fw(bold); .pd(10 * @unit 0 0); }
+    }
+  }
+
+  &-box{
+    .w(94%);  .pa();  .top(85 * @unit);  .bottom(55 * @unit);  .pd(0 3%);  overflow: scroll;
+
+    &-history, &-main{
+      &-item{
+        .w(100%);  .pd(5 * @unit 0);
+      }
+    }
+  }
+
+  &-form{
+    .pa();  .bottom(0);  .left(0);  .right(0);
+    .pd(8 * @unit 10 * @unit);  .bgc(#f4f4f6);  .b-top(1px solid #abadb2);
+
+    &-text{
+      .w(75%); .h(36 * @unit);  .disIB(); .lh(36 * @unit);
+      .f(15 * @unit);  .b(1px solid #abadb2);  .vm();
+      outline: none; .br(0 * @unit);
+    }
+    &-btn{
+      .disIB();  .vm();  .bgc(white);  .c(#333);  .br(3 * @unit);  .f(14 * @unit); .float-right();
+      .w(20%);  .h(38 * @unit);  .lh(38 * @unit);  .pd(0 20 * @unit); .b(1px solid #abadb2);
+    }
+  }
+}

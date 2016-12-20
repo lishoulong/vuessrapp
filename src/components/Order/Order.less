@@ -1,0 +1,366 @@
+@import "../common";
+
+@unit: 2 * @px;
+
+.order {
+	font-size: 28 * @px;
+	background-color: #ebeae8;
+
+    &-info {
+    	background-color: #fff;
+    	padding: 0 @pd20;
+    	margin-top: 40 * @px;
+
+    	&-sd {
+    		height: 80 * @px;
+    		line-height: 80 * @px;
+    	}
+
+    	&-status {
+    		background-color: @redColor;
+    		color: #fff;
+    		padding: 0 40 * @px;
+    		font-size: 32 * @px;
+    		display: inline-block;
+    	}
+
+    	&-date {
+    		color: #aaa;
+    		float: right;
+    	}
+
+    	&-text {
+    		margin: 30 * @px 0;
+
+            span.red {
+                color: #ff4520;
+            }
+    	}
+
+        &-text-service {
+            padding-top: 30 * @px;
+            color:#aaaeb9;
+            img{
+                width: 40 * @px;
+                vertical-align:middle;
+                padding-right: 10 * @px;
+            }
+        }
+
+        &-msg-service {
+            padding:20 * @px 0 30 * @px 0;
+        }
+
+        &-msg {
+          padding: 30 * @px 0;
+          border-top: 1px solid #ddd;
+          ///display: flex;
+
+          &-icon{
+            .float-left(); .w(25 * @unit);  .h(25 * @unit);
+            .bgimg("//img.58cdn.com.cn/zhuanzhuan/zz/trade/img/or_icon.png");
+            .bgpos(29% 99.9%); .bgsize(620%);
+          }
+          &-con{
+            .mg(0 0 0 30 * @unit);
+            .item{ .pd(3 * @unit 0); }
+            &-time{ .c(#999); }
+          }
+        }
+
+    	&-buyer {
+    		padding: 30 * @px 0;
+    		border-top: 1px solid #ddd;
+			  display: flex;
+				.youpinzhuan{
+					font-size: 32 * @px;
+				}
+
+			p {
+				flex:1;
+				align-items:center;
+				align-self:center;
+				justify-content: center;
+
+				&:last-child {
+					text-align: right;
+				}
+
+				span {
+					vertical-align: 18 * @px;
+					font-size: 24 * @px;
+					font-weight: bold;
+				}
+			}
+
+			img {
+				width: 60 * @px;
+				height: 60 * @px;
+				border-radius: 50%;
+			}
+
+			a {
+				border: 1px solid @redColor;
+				color: @redColor;
+				display: inline-block;
+				padding: 8 * @px 25 * @px;
+				border-radius: 10 * @px;
+			}
+    	}
+    }
+
+    &-detail {
+    	margin-top: 40 * @px;
+    	padding: @pd20;
+    	background-color: #fff;
+
+    	&-address {
+    		line-height: 1.8;
+    		padding-bottom: @pd20;
+    		border-bottom: 1px solid #ddd;
+
+            &-mobile {
+                float: right;
+            }
+    	}
+
+    	&-product {
+
+    		margin-top: @pd20;
+    		img {
+    			width: 200 * @px;
+    			height: 200 * @px;
+    		}
+
+    		&-wrap {
+    			display: flex;
+    		}
+
+    		&-items {
+    			flex: 1;
+    			padding-left: 20 * @px;
+    			margin-bottom: 20 * @px;
+    		}
+
+    		p:nth-of-type(1) {
+    			display: -webkit-box;
+    			overflow: hidden;
+    			text-overflow: ellipsis;
+    			-webkit-line-clamp: 2;
+    			-webkit-box-orient: vertical;
+    		}
+
+    		p.layout1 {
+    			margin-top: 40 * @px;
+    		}
+    		p.layout {
+    			text-align: right;
+    		}
+
+    		p.other {
+    			line-height: 2;
+
+    			span {
+    				float:right;
+    			}
+    		}
+    	}
+
+    	&-sum {
+    		border-top: 1px solid #ddd;
+    		padding-top: 20 * @px;
+    		i {
+    			background: url(./img/assure.png) no-repeat;
+    		    background-size: 100% 100%;
+    			display: inline-block;
+    			width: 26 * @px;
+    			height: 29 * @px;
+    			vertical-align: sub;
+    			margin-right: 10 * @px;
+    		}
+    		span {
+    			float: right;
+    			font-weight: bold;
+    		}
+    	}
+    }
+
+    &-bill {
+    	margin-top: 40 * @px;
+    	background-color: #fff;
+    	padding: @pd20;
+        padding-bottom: 100 * @px;
+
+    	p {
+    		line-height: 2;
+
+    		span {
+    			float: right;
+    		}
+    	}
+    }
+
+    &-oper {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        display: flex;
+        text-align: center;
+        color: #fff;
+        font-size: 28 * @px;
+        height: 100 * @px;
+        line-height: 100 * @px;
+
+        &>div {
+            flex:1;
+        }
+
+        &-cancel {
+            background-color: #46545f;
+        }
+
+        &-pay {
+            background-color:#ff4520;
+        }
+
+        a {
+            display: block;
+        }
+
+        &-zz {
+            display: block;
+            flex:1;
+            background-color: #ff472e;
+            color: #fff;
+        }
+    }
+
+}
+
+.cancel {
+    background-color: #ebeae8;
+    font-size: 28 * @px;
+    text-align: center;
+    ul {
+        background-color: #fff;
+    }
+
+    li {
+        border-bottom: 1px solid #ddd;
+        height: 90 * @px;
+        line-height: 90 * @px;
+    }
+
+    &-quit {
+        background-color: #fff;
+        color: #ff472e;
+        height: 90 * @px;
+        line-height: 90 * @px;
+        margin-top: 15 * @px;
+    }
+}
+
+
+.getPayCaptcha{
+  .PayPanel{
+    width: 80%;
+    background-color: #fff;
+    position: absolute;
+    top:50%;
+    left: 10%;
+    margin-top: -300 * @px;
+    color: #292d33;
+    border-radius: 10 * @px;
+    .close {
+      margin:24 * @px 30 * @px 15 * @px 0;
+      text-align: right;
+      overflow: hidden;
+      .close_img{
+        width: 40 * @px;
+        height: 40 * @px;
+        float: right;
+        img{
+          width: 24 * @px;
+          height: 24 * @px;
+        }
+      }
+    }
+    h3{
+      font-size: 32 * @px;
+      font-weight: 700;
+      margin-bottom: 20 * @px;
+      text-align: center;
+    }
+    p{
+      font-size: 28 * @px;
+      text-align: center;
+      margin-bottom: 55 * @px;
+    }
+    .sendCode{
+      display: flex;
+      color: #848c99;
+      font-size: 28 * @px;
+      padding:0 70 * @px;
+      p{
+        text-align: left;
+        width: 68%;
+        b{
+            font-size: 24 * @px;
+          font-weight: 400;
+        }
+      }
+      .canclick{
+        height: 62 * @px;
+        border-radius: 8 * @px;
+        line-height: 62 * @px;
+        border: 1px solid #e6454a;
+        color: #e6454a;
+        width: 32%;
+        text-align: center;
+      }
+      .btnDaojishi{
+        height: 62 * @px;
+        border-radius: 8 * @px;
+        line-height: 62 * @px;
+        border: 1px solid #7a8899;
+        color: #7a8899;
+        width: 32%;
+        text-align: center;
+      }
+    }
+    .codeBtn{
+      flex: 1;
+    }
+    form{
+      text-align: center;
+      input{
+        background-color: white;
+        border:1px solid rgb( 195, 199, 205 );
+        padding: 25 * @px 0;
+        width: 514 * @px;
+        border-radius: 6 * @px;
+        letter-spacing: 88 * @px;
+        text-indent: 77 *@px;
+
+        font-size: 48 * @px;
+        color: rgb( 41, 45, 51 );
+      }
+      p{
+        margin-top: 23 * @px;
+        color: #e6454a;
+        font-size: 24 * @px;
+      }
+    }
+    .confirmReceipt{
+      height: 74 * @px;
+      background-color: #e6454a;
+      line-height: 74 * @px;
+      width: 76.5%;
+      margin: 40 * @px auto 60 * @px auto;
+      border-radius: 8 * @px;
+      text-align: center;
+      color: #fff;
+    }
+  }
+}
