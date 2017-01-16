@@ -1,17 +1,17 @@
 <template>
-    <div class="detail-carousel" v-el:sliderwrap>
-    	<div v-el:slider class="slider"
+  <div>
+    <div class="detail-carousel" ref="sliderwrap">
+    	<div ref="slider" class="slider"
              :style="{ width : slideWidth, transform : slideLeft }"
              v-touch:tap="toBigView"
              v-touch:swipeleft="swipeLeft('slider')"
              v-touch:swiperight="swipeRight('slider')"
-             v-touch-options:swipe="swipeOption"
         >
-    		<div class="slider-item"  v-for="url in urls" track-by="$index">
-    			<img :ref="url" :style="imgStyle[$index]"/>
-                <div v-if="infos.status !=1 && infos.status !=2"  class="carousel-sold">
+    		<div class="slider-item"  v-for="(url,index) in showUrls" :url="url">
+    			<img :src="url" :style="imgStyle[index]"/>
+          <div v-if="infos.status !=1 && infos.status !=2"  class="carousel-sold">
 
-                </div>
+          </div>
     		</div>
     	</div>
       <div class="mengceng">
@@ -29,14 +29,13 @@
     <div v-if="showBigView" v-touch:tap="hideBigView" class="detail-carousel-full" >
         <div class="detail-carousel-full-bg"></div>
 
-        <div v-el:bigslider class="carousel-full-slider"
+        <div ref="bigslider" class="carousel-full-slider"
              :style="{ width : slideWidth, transform : slideLeft }"
              v-touch:swipeleft="swipeLeft('bigslider')"
              v-touch:swiperight="swipeRight('bigslider')"
-             v-touch-options:swipe="swipeOption"
         >
-            <div style="width:20rem" class="carousel-full-slider-item" v-for="url in bigUrls" track-by="$index">
-                <img :ref="url" style="width:20rem"/>
+            <div style="width:20rem" class="carousel-full-slider-item" v-for="(url, index) in bigUrls" track-by="index">
+                <img :src="url" style="width:20rem"/>
             </div>
         </div>
 
@@ -46,6 +45,7 @@
             </div>
         </div>
     </div>
+  </div>
 </template>
 <style lang="less">
 	@import "DetailCarousel.less" ;
@@ -53,18 +53,22 @@
 <script>
     import Native from '../../../libs/native'
     module.exports = {
-    	props : ["urls","bigUrls","currentCount","infos"],
+      	props : ["urls","bigUrls","infos"],
         data : function () {
             return {
                 showBigView : false,
                 swipeOpiton : {
                     direction : Hammer.DIRECTION_HORIZONTAL
                 },
-                imgStyle:[]
+                imgStyle:[],
+                currentCount: 1
             }
         },
         computed : {
-
+            showUrls:function(){
+              console.log(this.urls);
+              return this.urls;
+            },
             showStep:function(){
                 return this.bigUrls.length > 1;
             },
@@ -113,7 +117,7 @@
                     actiontype : "touxiang",
                     pagetype: "zz",
                 });
-                this.$router.go({
+                this.$router.push({
                      name: 'profile',
                      params: {user_id: this.infos.uid}
                 })
@@ -135,7 +139,7 @@
                 }
             },
             lazyLoad(elestr){
-                var eles = this.$els[elestr].querySelectorAll('img');
+                var eles = this.$refs[elestr].querySelectorAll('img');
                 if(!eles.length) return;
                 eles[this.currentCount-1].src = eles[this.currentCount-1].getAttribute('ref');
                 this.setPic(elestr,eles[this.currentCount-1],eles[this.currentCount-1].getAttribute('ref'),0.8);
@@ -153,7 +157,7 @@
                     /*var RATIO = 0.82;  */
                     var elemWidth = img.width;
                     var elemHeight = img.height;
-                    var containerWidth = _this.$els.sliderwrap.clientWidth;
+                    var containerWidth = _this.$refs.sliderwrap.clientWidth;
                     var containerHeight = containerWidth * RATIO;
                     var true_r = elemHeight / elemWidth;
                     //以容器宽为准等比压缩
@@ -184,8 +188,8 @@
                         }
                     }
                 }.bind(this));
-            },
-        },
+            }
+        }
         /*events : {
             initBigView : function(){
                 this.showBigView = false;

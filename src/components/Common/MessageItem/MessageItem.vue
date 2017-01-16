@@ -1,7 +1,8 @@
 <template>
+  <div>
     <div class="msgorder-list-item" v-for="item in items" v-show="items.length">
-        <a v-link="item.url" class="msgorder-list-item-link">
-            <img v-lazy="item.portrait | handlePic | formatProtocol" :class="[item.isRadius ? 'img-radius' : '']">
+        <router-link :to="item.url" class="msgorder-list-item-link">
+            <img v-lazy="filterPortrait(item.portrait)" :class="[item.isRadius ? 'img-radius' : '']">
             <div>
                 <p class="msgorder-list-item-link-name">
                     {{item.nickName}}
@@ -15,8 +16,9 @@
                     </span>
 
             </div>
-        </a>
+        </router-link>
     </div>
+  </div>
 </template>
 <style lang="less">
     @import "MessageItem.less";
@@ -36,14 +38,18 @@
 
             }
         },
-        filters: {
-            formatProtocol,
-            timeFilter,
-            handlePic: (url) => {
-              if(url) {
-                return handleImg.handleSingle(url, 50, 50)
-              }
+        methods: {
+          handlePic: (url) => {
+            if(url) {
+              return handleImg.handleSingle(url, 50, 50)
             }
+          },
+          filterPortrait: function(url){
+              return formatProtocol(this.handlePic(url));
+          }
+        },
+        filters: {
+            timeFilter
         },
         props: ['items']
     }

@@ -2,7 +2,7 @@
 	<div class="profile">
 
 		<div class="profile-info" :class="{ 'profile-info-man': userTags.gender==1, 'profile-info-woman': userTags.gender==2 }">
-			<img :src="userTags.portrait | handleImg" alt="avatar" class="profile-info-avatar">
+			<img :src="handleSingle(userTags.portrait)" alt="avatar" class="profile-info-avatar">
 			<p class="profile-info-name">{{ userTags.nickName || userTags.nickname}}</p>
 			<p class="profile-info-medal">
 				<span>
@@ -119,7 +119,7 @@
         			actiontype : "gerenzhuyeclick",
         			pagetype: "zz"
         		});
-				this.$router.go({
+				this.$router.push({
 					name: 'detail',
 					params: {product_id: product.infoId }
 				})
@@ -127,11 +127,8 @@
 			handleSingle: handleImg.handleSingle
 
 		},
-		filters: {
-			handleImg: handleImg.handleSingle
-		},
 		route: {
-			activate(){
+			beforeRouteEnter(){
 				Native.setTitle({title: "个人中心"});
 				Native.setWebLog({
         			actiontype : "gerenzhuye",
@@ -164,7 +161,7 @@
 					}
 				})
 			},
-			deactivate() {
+			beforeDestroy() {
 				/*this.noMoreData = false
 				this.pageNumber = 1
 				this.loading = false*/

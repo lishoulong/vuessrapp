@@ -1,7 +1,7 @@
 <template>
 	<div class="chat-dialog">
 		<div class="chat-dialog-goods">
-			<a v-link="{name:'detail',params:{product_id: info.id}}">
+			<router-link to="{name:'detail',params:{product_id: info.id}}">
 				<div class="chat-dialog-goods-icon">
 					<img :src="info.pics" />
 				</div>
@@ -9,10 +9,10 @@
 					<div class="title">{{info.title}}</div>
 					<div class="price">{{info.price | price}}</div>
 				</div>
-			</a>
+			</router-link>
 		</div>
 
-		<div id="chat-dialog-box" class="chat-dialog-box" v-el:chatBox>
+		<div id="chat-dialog-box" class="chat-dialog-box" ref="chatBox">
 			<div class="chat-dialog-box-history">
 				<message :messages="historyList" :uid="userInfo.id" ></message>
 			</div>
@@ -38,22 +38,12 @@
 	import * as Chat from "../../libs/chat";
 	import HandleImg from "../../libs/handleImg";
 	import { dateFormat, countDown } from "../../libs/util";
-	import { setChatList, setSystemList } from "../../vuex/actions";
-	import { chatList, systemList } from '../../vuex/getters'
 	import Native from '../../libs/native.js'
-
+	import { mapGetters } from 'vuex'
 	import Message from './Message/Message.vue'
 
 	export default {
 		name: 'Dialog',
-		vuex: {
-			actions: {
-				setChatList, setSystemList
-			},
-			getters: {
-				chatList, systemList
-			}
-		},
 		data(){
 			return {
 				userInfo: {
@@ -81,12 +71,18 @@
 				flag: true //离开此路由，断开user_pick刷新
 			};
 		},
+		computed: {
+			...mapGetters({
+				chatList:'chatList',
+				systemList:'systemList'
+			})
+		},
 		components: {
 			'message': Message
 		},
 		methods: {
 			scrollBottom(){
-				this.$els.chatbox.scrollTop = this.$els.chatbox.scrollHeight;
+				this.$refs.chatbox.scrollTop = this.$refs.chatbox.scrollHeight;
 			},
 			getInfoSimpleDetail(){
 				Api.getInfoSimpleDetail({
@@ -185,7 +181,7 @@
 									}
 									unread[resp.data.protocol_content.from_uid] += 1;
 									newChatList[this.userInfo.id] = _.extend({}, unread);
-									this.setChatList(newChatList);
+									this.$store.dispatch('setChatList',newChatList);
 								}
 							} else if(resp.data.sub_cmd == "push_notify"){		//收到系统消息
 								//TODO: 系统消息存储
@@ -212,14 +208,14 @@
 				if(_.has(unread, this.toInfo.id)){
 					delete unread[this.toInfo.id];
 					newChatList[this.userInfo.id] = _.extend({}, unread);;
-					this.setChatList(_.extend({}, newChatList));
+					this.$store.dispatch("setChatList",_.extend({}, newChatList));
 				}
 			},
 			setTitle(){
 				Native.setTitle({ title: this.toInfo.nickName });
 				Native.extendRightBtn("top_right", "消息", "openChatList");
 				window.openChatList = () => {
-					return this.$router.go({
+					return this.$router.push({
 						name: 'chat'
 					});
 				};
@@ -259,39 +255,38 @@
 			},
 			dateFormat
 		},
-		route: {
-			data(){
-				this.initData();
-				this.getInfoSimpleDetail();
-				this.clearUnread();
-				this.getOnlineMsg(() => {
+		beforeRouteEnter(to, from, next){
+			next(vm => {
+				vm.initData();
+				vm.getInfoSimpleDetail();
+				vm.clearUnread();
+				vm.getOnlineMsg(() => {
 					return Api.getNickNameAndPhoto({
-						userids: `${this.userInfo.id},${this.toInfo.id}`
+						userids: `${vm.userInfo.id},${vm.toInfo.id}`
 					});
 				}).then(resp => {
 					if(resp.data && resp.data.respCode == 0 && resp.data.respData){
-						//this.nickName = resp.data.respData[this.uid].nickName;
-						//this.portrait = resp.data.respData[this.uid].portrait;
-						this.userInfo = _.extend(this.userInfo, resp.data.respData[this.userInfo.id]);
-						this.toInfo = _.extend(this.toInfo, resp.data.respData[this.toInfo.id]);
-						this.historyList = _.map(this.historyList, message => {
+						//vm.nickName = resp.data.respData[vm.uid].nickName;
+						//vm.portrait = resp.data.respData[vm.uid].portrait;
+						vm.userInfo = _.extend(vm.userInfo, resp.data.respData[vm.userInfo.id]);
+						vm.toInfo = _.extend(vm.toInfo, resp.data.respData[vm.toInfo.id]);
+						vm.historyList = _.map(vm.historyList, message => {
 							return _.extend({status: 1}, message, resp.data.respData[message.from_uid]);
 						});
-						this.scrollBottom();
-						this.setTitle();
-						return this.userPick();
+						vm.scrollBottom();
+						vm.setTitle();
+						return vm.userPick();
 					}
 				});
-			},
-			canDeactivate(){
-				this.userPick();
-				this.flag = false;
+			})
+		},
+		beforeRouteLeave(){
+			this.userPick();
+			this.flag = false;
+			Native.extendRightBtn("top_right", " ", "rightMessageCallback");
+			window.rightMessageCallback = () => {
 
-				Native.extendRightBtn("top_right", " ", "rightMessageCallback");
-				window.rightMessageCallback = () => {
-
-				};
-			}
+			};
 		}
 	}
 

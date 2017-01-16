@@ -28,7 +28,7 @@
 		<question v-show="typeStatus==8"></question>
 		<cheat v-show="typeStatus==9"></cheat>
 		</div>
-		
+
 	</div>
 </template>
 <style lang="less">
@@ -63,7 +63,7 @@
 		},
 		methods: {
 			clickFirst(index){
-				this.$router.go({name:'helper',params:{type:index}})
+				this.$router.push({name:'helper',params:{type:index}})
 			}
 		},
 		components:{
@@ -79,7 +79,7 @@
 
 		},
 		route: {
-			activate(){
+			beforeRouteEnter(){
 				Native.setTitle({ title: "帮助中心" });
 			}
 		}

@@ -23,13 +23,13 @@
 					{{ order.statusInfo }}
 				</span>
 				<span class="order-info-date">
-					{{ order.latestOpTime | parseInt | dateFormat 'MM/dd hh:mm'}}
+					{{ order.latestOpTime | parseInt | dateFormat('MM/dd hh:mm')}}
 				</span>
 			</div>
 			<!--验机服务-->
 			<div v-if="order.hasOwnProperty('serviceWinInfo')">
-				<p class="order-info-text-service"><img :src="serviceWindow.serviceWinIcon | handlePic" />{{serviceWindow.serviceWinTitle}}</p>
-				<p class="order-info-msg-service">{{{serviceWindow.serviceWinContent}}}</p>
+				<p class="order-info-text-service"><img :src="handlePic(serviceWindow.serviceWinIcon,false)" />{{serviceWindow.serviceWinTitle}}</p>
+				<p class="order-info-msg-service" v-html="serviceWindow.serviceWinContent"></p>
 			</div>
 			<div v-else>
 				<p class="order-info-text">
@@ -41,20 +41,20 @@
 					<div class="order-info-msg-con">
 						<div class="order-info-msg-con-title item">卖家标明已发货，货物信息请在转转APP查看</div>
 						<div class="order-info-msg-con-info item" v-show="order.lastLogisticsInfo">{{order.lastLogisticsInfo}}</div>
-						<div class="order-info-msg-con-time item" v-show="order.lastLogisticsTime">{{order.lastLogisticsTime | parseInt | dateFormat 'YYYY-MM-dd hh:mm'}}</div>
+						<div class="order-info-msg-con-time item" v-show="order.lastLogisticsTime">{{order.lastLogisticsTime | parseInt | dateFormat('YYYY-MM-dd hh:mm')}}</div>
 					</div>
 				</div>
 			</div>
 			<div class="order-info-buyer" v-if="!typelistcomeBot">
 				<p>
-					<img :src="order.userPic | handlePic | formatProtocol" alt="">
+					<img :src="handlePic(order.userPic, true)" alt="">
 					<span>{{ order.userNickName }}</span>
 				</p>
 				<p>
 					<a v-if="order.userNickName == '转转优品' || !!order.availableServices" @click.stop.prevent = "backDetail">{{ order.btnTextContract }}</a>
-					<a v-else v-link="{ name: 'dialog', params: {user_id: order.userId, product_id: order.infoId }}">
+					<router-link v-else to="{ name: 'dialog', params: {user_id: order.userId, product_id: order.infoId }}">
 						{{ order.btnTextContract }}
-					</a>
+					</router-link>
 				</p>
 			</div>
 			<div class="order-info-buyer" v-if="typelistcomeBot">
@@ -102,7 +102,7 @@
 					<p class="other">红包减免<span>-￥0</span></p>
 				</div>
 			</a>
-			<a v-else v-link="{name: 'detail', params: {product_id: order.infoId}}">
+			<router-link v-else to="{name: 'detail', params: {product_id: order.infoId}}">
 				<div class="order-detail-address">
 					<p>
 						收件人：{{ order.address.name }}
@@ -132,7 +132,7 @@
 					<p v-if="order.hasOwnProperty('availableServices')" class="other">优品验机服务<span>￥{{order.availableServices[0].nowPrice}}</span></p>
 					<p class="other">红包减免<span>-￥0</span></p>
 				</div>
-			</a>
+			</router-link>
 
 			<div class="order-detail-sum">
 				<i></i>转转担保交易
@@ -155,7 +155,7 @@
 			<p>
 				下单时间
 				<span>
-				 {{order.createTime | parseInt | dateFormat 'YYYY-MM-dd hh:mm'}}
+				 {{order.createTime | parseInt | dateFormat('YYYY-MM-dd hh:mm')}}
 				</span>
 			</p>
 			<p>
@@ -167,7 +167,7 @@
 			<p>
 				发货时间
 				<span v-if="order.deliverTime > 0">
-					{{order.deliverTime | parseInt | dateFormat 'YYYY-MM-dd hh:mm'}}
+					{{order.deliverTime | parseInt | dateFormat('YYYY-MM-dd hh:mm')}}
 				</span>
 			</p>
 		</div>
@@ -248,10 +248,10 @@
 			</div>
 		</div>
 
-		<zz-tip :visible.sync="showReceiveTip" :tipsparam.sync="confirmReciveParam" slide="center">
+		<!-- <zz-tip :visible.sync="showReceiveTip" :tipsparam.sync="confirmReciveParam" slide="center">
 
 			<div class="getPayCaptcha">
-			    <div class="blackbg1" v-el:blackbg1></div>
+			    <div class="blackbg1" ref="blackbg1"></div>
 			    <div class="PayPanel">
 			        <div class="close" ><div class="close_img" @click=""><img src="img/close.png"></div></div>
 			        <h3>确认收货</h3>
@@ -262,18 +262,18 @@
 			            <div v-else class="codeBtn canclick" @click="">重新发送</div>
 			        </div>
 			        <form @submit.prevent="">
-			            <input v-el:key type="number" v-model="" @input="">
-			            <!-- <input type="number" v-model="key1"  @keyup="checkInput(1,$event)" v-el:key1>
+			            <input ref="key" type="number" v-model="" @input="">
+			            <input type="number" v-model="key1"  @keyup="checkInput(1,$event)" v-el:key1>
 			            <input type="number" v-model="key2"  @keyup="checkInput(2,$event)" v-el:key2>
 			            <input type="number" v-model="key3"  @keyup="checkInput(3,$event)" v-el:key3>
-			            <input type="number" v-model="key4"  @keyup="checkInput(4,$event)" v-el:key4> -->
+			            <input type="number" v-model="key4"  @keyup="checkInput(4,$event)" v-el:key4>
 			            <p v-show="">*请输入正确的验证码</p>
 			        </form>
 			        <div class="confirmReceipt" @click="">确认收货</div>
 			    </div>
 			</div>
 
-		</zz-tip>
+		</zz-tip> -->
 
 		<cancel-order :is-show.sync="showCancelTip" :order-id="orderId" :callback="cancelOrderCallback"></cancel-order>
 
@@ -362,19 +362,21 @@
 		filters: {
 			dateFormat,
 			parseInt,
-			countDown,
-			formatProtocol,
-			handlePic(url){
-			if(url) {
-					return handleImg.handleSingle(url, 50, 50)
-				}
-			}
+			countDown
 		},
 		methods:{
 			stopDownload(e){
 				if(this.hideDownload) {
 					Native.toast('暂不支持此功能,请去转转查看');
 					e.preventDefault();
+				}
+			},
+			handlePic(url,protocol){
+				if(protocol){
+					url = formatProtocol(url)
+				}
+				if(url) {
+						return handleImg.handleSingle(url, 50, 50)
 				}
 			},
 			cancelOrderCallback(response){
@@ -457,7 +459,7 @@
 			'cancel-order': CancelOrder
 		},
 		route: {
-			activate(){
+			beforeRouteEnter(){
 				document.body.style.backgroundColor = '#ebeae8'
 				this.order = { address: {}}
 			},
@@ -487,7 +489,7 @@
 					}
 				})
 			},
-			deactivate(){
+			beforeDestroy(){
 				document.body.style.backgroundColor = ''
 			}
 		}

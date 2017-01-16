@@ -12,7 +12,7 @@
 }
 
 .zz-tips{
-  
+
   position: fixed;
   left:0;
   right:0;
@@ -73,7 +73,7 @@
     }
     .loadingContent{
       font-size: 30 * @px;
-    } 
+    }
   }
 
   &-dialog{
@@ -118,7 +118,7 @@
       -webkit-transform: rotate(-90deg);
     }
   }
- 
+
 
  &-confirm{
    width: 72%;
@@ -178,29 +178,29 @@
      line-height: 86 * @px;
    }
    .tips-close{
-     display:inline-block; 
+     display:inline-block;
      position: absolute;
      right: 2px;
      top: 7px;
-     width:12px; 
-     height:2px; 
-     background:#999; 
-     font-size:0; 
+     width:12px;
+     height:2px;
+     background:#999;
+     font-size:0;
      line-height:0;
      vertical-align:middle;
      -webkit-transform: rotate(45deg);
    }
    .tips-close:after{
-     content:'.'; 
-     display:block; 
-     width:12px; 
-     height:2px; 
+     content:'.';
+     display:block;
+     width:12px;
+     height:2px;
      background:#999;
      -webkit-transform: rotate(-90deg);
    }
  }
- 
- 
+
+
 
 }
 
@@ -258,13 +258,17 @@
 
 
 /*  始终保留在元素上 */
-.zz-slide-top-transition,
-.zz-slide-left-transition,
-.zz-slide-right-transition,
-.zz-slide-down-transition
+.zz-slide-top-enter-active,
+.zz-slide-top-leave-active,
+.zz-slide-left-enter-active,
+.zz-slide-left-leave-active,
+.zz-slide-right-enter-active,
+.zz-slide-right-leave-active,
+.zz-slide-down-enter-active,
+.zz-slide-down-leave-active,
 {
-  -webkit-transition: -webkit-transform .2s cubic-bezier(0,0,.25,1); 
-  transition: transform .2s cubic-bezier(0,0,.25,1); 
+  -webkit-transition: -webkit-transform .2s cubic-bezier(0,0,.25,1);
+  transition: transform .2s cubic-bezier(0,0,.25,1);
 }
 
 
@@ -289,4 +293,3 @@
   -webkit-transform: translate3d(0, -100%, 0);
   transform: translate3d(0, -100%, 0);
 }
-

@@ -7,6 +7,8 @@ import login from './modules/login.js'
 import localStore from './modules/localStore.js'
 import zhijian from './modules/zhijian.js'
 import payafter from './modules/payafter.js'
+import * as actions from './actions'
+import * as getters from './getters'
 
 const debug = process.env.NODE_ENV !== 'production'
 
@@ -20,5 +22,7 @@ export default new Vuex.Store({
 		zhijian,
 		payafter
 	},
+	actions,
+	getters,
 	strict: debug,
 })

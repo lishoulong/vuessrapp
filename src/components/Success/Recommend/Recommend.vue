@@ -3,13 +3,13 @@
         <dl>
             <dt>{{title}}</dt>
             <dd v-for="item in recommends" :id="item.infoId">
-                <a v-link="{name: 'detail', params: {product_id: item.infoId}}">
+                <router-link to="{name: 'detail', params: {product_id: item.infoId}}">
                     <div class="icon" :style="{ backgroundImage: 'url('+ handleSingle(item.infoImage) + ')'}">
                         <!-- <img :src="item.infoImage | imgUrl" /> -->
                         <div class="price">￥{{item.infoPrice }}</div>
                     </div>
                     <div class="title">{{item.infoTitle}}</div>
-                </a>
+                </router-link>
             </dd>
         </dl>
     </div>

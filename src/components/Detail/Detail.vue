@@ -1,7 +1,7 @@
 <template>
 	<div class="detail">
-		<div class="product-onsell" v-show="!isSoldout" v-el:parent>
-			<carousel :current-count.sync="currentCount" v-bind:urls="pics" :big-urls="bigPics" :infos="infos"></carousel>
+		<div class="product-onsell" v-show="!isSoldout" ref="parent">
+			<carousel v-bind:urls="pics" :big-urls="bigPics" :infos="infos"></carousel>
 			<div v-if="isService && isTipsState" class="yanji-content">{{qualitySafeTip}}<i class="tips-close"  @click="closeDiv"></i></div>
 			<div class="detail-info">
 				<div v-if="nowPrice" class="detail-info-price">
@@ -9,7 +9,7 @@
 					<span class="detail-info-price-ori" v-if="infos.oriPrice && infos.oriPrice>0">￥{{oriPrice}}</span>
 					<span class="detail-info-price-fare" v-if="infos.freigth>0">运费{{infos.freigth}}元</span>
 					<div class="detail-info-collect" @click="showCollectItemTip">
-						<span><img src="images/collect-item-star.png" /></span>
+						<span><img src="./images/collect-item-star.png" /></span>
 						<span>收藏</span>
 					</div>
 				</div>
@@ -26,7 +26,7 @@
 				<div class="detail-info-tradeTip" @click="popTips">
 					<span>请使用</span>
 					<span class="detail-info-tradeTip-popBtn" >转转担保交易</span>
-					<img class="detail-info-tradeTip-question" src="images/question.png" />
+					<img class="detail-info-tradeTip-question" src="./images/question.png" />
 				</div>
 
 				<p v-if="infos.groupName" class="detail-info-area">
@@ -46,20 +46,20 @@
 				</ul>
 				<ul class="mobile-tags">
 					<li class="" v-for="mobiletTag in mobiletTags">
-						<img v-lazy="mobiletTag.qualityIcon | handlePic">
+						<img v-lazy="handlePic(mobiletTag.qualityIcon)">
 						{{mobiletTag.qualityTitle}}
 					</li>
 				</ul>
 				<div v-if="isService" class="youpin-zhijian">
 					<a href="//m.zhuanzhuan.58.com/Mzhuanzhuan/zzYoupin/intro_detail.html">
-						<img src="images/youpin-little-sq@3x.png" />
+						<img src="./images/youpin-little-sq@3x.png" />
 						<p>不敢放心买？</p>
 						<p><span>1元即可享受</span>转转官方提供的专业验机服务</p>
 						<i></i>
 					</a>
 				</div>
 				<div v-if="isService" class="zhijian_zixun">
-					<a :href=zhijianZixunLink><img v-lazy="zhijianZixunPic | handlePic" ></a>
+					<a :href=zhijianZixunLink><img v-lazy="handlePic(zhijianZixunPic)" ></a>
 				</div>
 
 				<div v-if="isService" class="detail-alert">
@@ -69,21 +69,21 @@
 
 			<div class="detail-info" v-if="false">
 				<div class="detail-info-face-trade">
-					<img class="detail-info-face-trade-icon" src="images/eye.png" />
+					<img class="detail-info-face-trade-icon" src="./images/eye.png" />
 					<span>此物品支持</span><span class="detail-info-face-trade-popBtn" @click="showFaceTrade">在线付款，当面验货</span>
 				</div>
 			</div>
 
 			<div class="detail-personal">
 				<div class="detail-love-user" v-if="infos.collectCount > 0" @click="showLikeItemTip">
-					<img src="images/heart.png" class="detail-love-user-icon" />
+					<img src="./images/heart.png" class="detail-love-user-icon" />
 					<span>{{infos.collectCount}}人喜欢</span>
 					<ul class="love-user-img">
 						<li class="love-user-head extra-user-head">
-							<img src="images/arrow-like.png" />
+							<img src="./images/arrow-like.png" />
 						</li>
-						<li class="love-user-head" v-for="loveImg in loveImgs" track-by="$index">
-							<img v-lazy="loveImg | handlePic '54' '54'">
+						<li v-if="loveImgs.length>0" class="love-user-head" v-for="(loveImg, index) in loveImgs" track-by="index">
+							<img v-lazy="handlePic(loveImg,54,54)">
 						</li>
 					</ul>
 					<!-- <b v-if="infos.collectCount>5">...</b> -->
@@ -111,7 +111,7 @@
 				</div>
 				<i></i>
 				<div class="user-sesame-wrap" @click="getCallApp">
-					<span v-show="dredgeZhima == 1" class="user-sesame-logo">芝麻信用</span>
+					<span v-if="dredgeZhima == 1" class="user-sesame-logo">芝麻信用</span>
 					<span v-else class="user-sesame-logo active">芝麻信用</span>
 					<span class="user-sesame-more">查看</span>
 					<i></i>
@@ -127,7 +127,7 @@
 						<h4>【转转】是什么？</h4>
 						<div>
 							<p>58二手全新升级，更专业的二手交易平台</p>
-							<img src="images/pic_vs_a.jpg"/>
+							<img src="./images/pic_vs_a.jpg"/>
 							<div class="zhuan-detail-content">
 								<p class="left-content">
 										<b>买：这个周末面交？</b>
@@ -141,7 +141,7 @@
 						</div>
 						<div>
 							<p>信息逐条严审、交易全程担保、拒绝骗子</p>
-							<img src="images/pic_vs_b.jpg"/>
+							<img src="./images/pic_vs_b.jpg"/>
 							<div class="zhuan-detail-content">
 								<p class="left-content">
 										<b>图片超漂亮</b>
@@ -152,7 +152,7 @@
 										<b>更安心，更靠谱</b>
 								</p>
 							</div>
-							<img src="images/pic_vs_c.jpg"/>
+							<img src="./images/pic_vs_c.jpg"/>
 							<div class="zhuan-detail-content">
 								<p class="left-content">
 										<b>当面交易后发现是假货</b>
@@ -176,7 +176,7 @@
 				</div>
 			</div>
 			<div class="separator zz-and-recommend"></div>
-			<recommend v-ref:reco-child v-bind:is-trade="isTrade" v-bind:recommends="recommends"></recommend>
+			<recommend ref="recoChild" v-bind:is-trade="isTrade" v-bind:recommends="recommends"></recommend>
 			 <div class="empty"></div>
 			<div v-if="infos.groupId && infos.groupSpeInfoLabel"
 			 class="detail-footer detail-footer-circle">
@@ -199,7 +199,7 @@
 		</div>
 		<!-- 后端返回数据异常时的页面展示 -->
 		<div class="product-sold" v-if="isSoldout">
-			<img src="images/soldout.png" />
+			<img src="./images/soldout.png" />
 		</div>
 		<zz-tip :visible.sync="popTipParam.visible" :tipsparam.sync="popTipParam">
 			<ul class="popTipList">
@@ -236,7 +236,6 @@
 	import {getScrollTop, getClientHeight, getDocHeight} from '../../libs/util'
 
 	const windowWidth = document.documentElement.clientWidth;
-
 	export default {
 		name: 'detail',
 		data(){
@@ -277,7 +276,6 @@
 				comments : [],
 				recommends : [],
 				uid: Cookie.getUID(),
-				currentCount : 1,
 				isOrdered: false,
 				isSoldout: false,
 				isService: false,
@@ -285,18 +283,12 @@
 				isTipsShow:true,
 				zhijianZixunPic:'',
 				zhijianZixunLink:'',
-				btnsold: '',
 				btnmine: '',
 				// 厂商内置包的header，不允许有跳下载
 				hideComment: !!Cookie.get('inter_manufacturer'),
-				fromCityName:'',
 				maidianCount: 0,
 				dredgeZhima:0
 			}
-		},
-		filters: {
-			handlePic: handleImg.handleSingle
-
 		},
 		created() {
 			if(!!this.$route.query.token){
@@ -309,6 +301,7 @@
 			metric(){
 				return !!this.$route.query.metric? this.$route.query.metric : "";
 			},
+
 			infoId(){
 				return this.$route.params.product_id;
 			},
@@ -325,7 +318,6 @@
 			labels(){
 				return this.infos.label ? this.infos.label.split("|") : []
 			},
-
 			loveImgs(){
 				return this.infos.loveUserHeadImg;
 			},
@@ -377,6 +369,9 @@
 			clearSta(){
 				this.isOrdered = false;
 			},
+			handlePic(url, width, height){
+				return handleImg.handleSingle(url, width, height)
+			},
 			showFaceTrade(){
 				this.faceTradeParam.visible = true;
 			},
@@ -407,30 +402,30 @@
 				});
 			},
 			cancelLikeItem() { },
-	      	orBuy(){
-
+	    orBuy(){
+          alert('orByu');
 		  		Native.setWebLog({
 		  			actiontype : "buy",
 		  			pagetype: "zzdetail",
 		  			cate: this.infos.cateId
 		  		});
 		  		if(this.infos.status==1){
-
-					this.$nextTick(() => {
-						this.$router.go({
-							name: 'delivery',
-							params: {
-								product_id: this.infoId
-							},
-							query: {
-								metric: this.metric
-							}
-						})
-					})
+							this.$nextTick(() => {
+								console.log(this.$router);
+								this.$router.push({
+									name: 'delivery',
+									params: {
+										product_id: this.infoId
+									},
+									query: {
+										metric: this.metric
+									}
+								})
+							})
 		      	}else{
 		      		if(!!this.infos.orderId){
 		      				//如果是本人下过的单，则会跳到订单详情页
-		        		this.$router.go({
+		        		this.$router.push({
 		                  name: 'order',
 		                  params: {
 		                      order_id: this.infos.orderId
@@ -440,18 +435,18 @@
 		      			Native.toast("宝贝被拍下还未付钱，还有机会哦！");
 		      		}
 		  		}
-	      	},
-	      	downApp(){
+      	},
+      	downApp(){
 		  		Native.setWebLog({
 		  			actiontype : "seller",
 		  			pagetype: "zzdetail",
 		  			cate: this.infos.cateId
 		  		})
-				Native.callZZApp({urlSearch:{
-					openType: 'detail',
-					id: this.infoId
-				}});
-	      	},
+					Native.callZZApp({urlSearch:{
+						openType: 'detail',
+						id: this.infoId
+					}});
+      	},
 	      	circleDialog() {
 	      		Native.setWebLog({
 							actiontype: "click",
@@ -518,7 +513,7 @@
 		  			pagetype: "zzdetail",
 		  			cate: this.infos.cateId
 		  		});
-		      	this.$router.go({
+		      	this.$router.push({
 		              name: 'dialog',
 		              params: {
 		                  user_id: this.infos.uid,
@@ -534,7 +529,7 @@
 		  			actiontype : "gerenxinxi",
 		  			pagetype: "zz",
 		  		});
-		      	this.$router.go({
+		      	this.$router.push({
 		      		 name: 'profile',
 		      		 params: {user_id: this.infos.uid}
 		      	})
@@ -583,161 +578,170 @@
 			},
 			getMaidianCount(count){
 				return this.maidianCount<count?this.maidianCount = count: this.maidianCount;
-			}
-		},
-		route: {
-			canReuse(){
-				return false
 			},
-			data(){
-				console.log(this.fullPath);
-				this.isSoldout = false;
+			exeScroll(){
+				var that = this;
 				document.onscroll = function(){
 					let current = getScrollTop() + getClientHeight();
 					let docHeight = getDocHeight();
-					let recommendH = (!!this.$refs.recoChild.$els.ulheight && !!this.$refs.recoChild.$els.ulheight.offsetHeight)?this.$refs.recoChild.$els.ulheight.offsetHeight : 0;
+					let recommendH = (!_.isEmpty(that.$refs.recoChild.$refs) && !!that.$refs.recoChild.$refs.ulheight && !!that.$refs.recoChild.$refs.ulheight.offsetHeight)?that.$refs.recoChild.$els.ulheight.offsetHeight : 0;
 					let marginH1 = docHeight - recommendH/4;
 					let marginH2 = docHeight - 2 * recommendH/4;
 					let marginH3 = docHeight - 3 * recommendH/4; //次小
 					let marginH4 = docHeight - recommendH; //最小的
 			    // 到达底部返回true
 			    if (marginH4 <= (current + 20) && (current + 20)<= marginH3) {
-							this.getMaidianCount(2);
+							that.getMaidianCount(2);
 			    } else if(marginH3 <= (current + 20) && (current + 20)<= marginH2) {
-							this.getMaidianCount(4);
+							that.getMaidianCount(4);
 					}else if (marginH2 <= (current + 20) && (current + 20)<= marginH1) {
-							this.getMaidianCount(6);
+							that.getMaidianCount(6);
 			    }else if(marginH1 <= (current + 20) && (current + 20)<= docHeight){
-							this.getMaidianCount(8);;
+							that.getMaidianCount(8);;
 					}else{
 							return
 					}
-				}.bind(this);
-				Native.setTitle({title: "转转详情页"});
-				this.currentCount = 1;
-				getProduct({ infoId:this.infoId, metric: this.metric }).then(response => {
-					if(response.status && response.data && response.data.respCode == 0){
-						var data = response.data.respData
-						if(data.status==8){
-							this.isSoldout = true;
-						}
-						data.portrait = handleImg.handleSingle(data.portrait, 54, 54)
-	                    this.infos = data
-	                    this.pics = handleImg.handleBundle(data.pics, windowWidth, Math.floor(windowWidth * 0.8));
-	                    this.bigPics = handleImg.handleBundle(data.pics, windowWidth, windowWidth);
-											let latitude = data.lat || '',
-											    lontitude = data.lon || '';
-	                    if(this.infos.uid == this.uid){
-							this.btnmine = "去转转";
-						}
-						if(this.infos.groupId && this.infos.groupSpeInfoLabel){
-							Native.setWebLog({
-								actiontype: "show",
-								pagetype: "detailtz",
-								cate: this.fullPath,
-								params:[this.infoId]
-							});
-						}else if(this.infos.groupId){
-							Native.setWebLog({
-								actiontype: "show",
-								pagetype: "detailqz",
-								cate: this.fullPath,
-								params:[this.infoId]
-							});
-						}else{
-							Native.setWebLog({
-								actiontype: "detailshow",
-								pagetype: "zz",
-								cate: this.fullPath,
-								params:[this.infoId]
-							});
-							Native.setWebLog({
-								actiontype: "show",
-								pagetype: "detail",
-								cate: this.fullPath,
-								params:[this.infoId]
-							});
-						}
-
-	                    if(data.qualitySafeTip != ''){
-	                    	this.qualitySafeTip = data.qualitySafeTip;
-	                    }
-	                    if(this.infos.serviceInfo&&this.infos.serviceInfo[0].serviceId==1){
-		            		this.isService = true;
-		            		this.zhijianZixunPic = data.serviceInfo[0].picUrl;
-		            		this.zhijianZixunLink = handleImg.handleSingle(data.serviceInfo[0].mUrl);
-		            	}else{
-		            		this.isService = false;
-		            	}
-									//后台接口写好以后，把经纬度字段作为参数传进来。
-									getrecommendforvisit({ infoid: this.infoId, metric: this.metric, lon: lontitude, lat: latitude }).then( response => {
-										console.log('getrecommendforvisit',response.data.respData);
-										if(response.status && response.data && response.data.respCode == 0){
-
-											if (this.isTrade){
-												let stack1 = [], stack2 = [];
-												_.each(response.data.respData.infos, (item, index) => {
-													let disnum = parseInt(item.distance, 10);
-													if (disnum >= 0){
-														stack1.push(item)
-													}else {
-														stack2.push(item)
-													}
-												})
-												if(stack1.length >= 8){
-												 //_.filter循环的函数一定要return值出来。
-												 this.recommends =	_.chain(stack1)
-													 .map(item => { item.distance = parseInt(item.distance, 10); return item; })
-													 .sortBy("distance")
-													 .filter((item, index) => {
-														return index < 8;
-													 })
-													 .value()
-												}else {
-													this.recommends =	_.chain(stack1)
-														 .map(item => { item.distance = parseInt(item.distance, 10); return item; })
-														 .sortBy("distance")
-														 .concat(stack2)
-														 .filter((item, index) => {
-															return index < 8;
-														 })
-														 .value()
-												}
-												//this.recommends = !!response.data.respData.infos[0].distance?_.chain(response.data.respData.infos).map(item => { item.distance = parseInt(item.distance, 10); return item; }).sortBy("distance").reverse().filter((item, index) => (index < 8)).value() : _.filter(response.data.respData.infos, (item, index) => (index < 8));
-											}else {
-												this.recommends = _.filter(response.data.respData.infos, (item, index) => (index < 8));
-											}
-
-										}
-									});
-						queryTags({getUid:this.infos.uid}).then(response=>{
-							if(response.status&&response.data&&response.data.respCode == 0){
-							    this.dredgeZhima = response.data.respData.zhima;
-							}
-						})
-					}else{
+				};
+			},
+			handleInfoId(response){
+				if(response.status && response.data && response.data.respCode == 0){
+					var data = response.data.respData
+					if(data.status==8){
 						this.isSoldout = true;
 					}
+					data.portrait = handleImg.handleSingle(data.portrait, 54, 54)
+					this.infos = data
+					this.pics = handleImg.handleBundle(data.pics, windowWidth, Math.floor(windowWidth * 0.8));
+					this.bigPics = handleImg.handleBundle(data.pics, windowWidth, windowWidth);
+					let latitude = data.lat || '',
+							lontitude = data.lon || '';
+					if(this.infos.uid == this.uid){
+						this.btnmine = "去转转";
+					}
+					if(this.infos.groupId && this.infos.groupSpeInfoLabel){
+						Native.setWebLog({
+							actiontype: "show",
+							pagetype: "detailtz",
+							cate: this.fullPath,
+							params:[this.infoId]
+						});
+					}else if(this.infos.groupId){
+						Native.setWebLog({
+							actiontype: "show",
+							pagetype: "detailqz",
+							cate: this.fullPath,
+							params:[this.infoId]
+						});
+					}else{
+						Native.setWebLog({
+							actiontype: "detailshow",
+							pagetype: "zz",
+							cate: this.fullPath,
+							params:[this.infoId]
+						});
+						Native.setWebLog({
+							actiontype: "show",
+							pagetype: "detail",
+							cate: this.fullPath,
+							params:[this.infoId]
+						});
+					}
 
-                });
-                getInfoComments(this.infoId).then(response => {
-                	if(response.status && response.data && response.data.respCode == 0){
-                		var data = response.data.respData
-	                	data.portrait = handleImg.handleSingle(data.portrait)
-	                	this.comments = data;
-                	}
-                });
-
+					if(data.qualitySafeTip != ''){
+						this.qualitySafeTip = data.qualitySafeTip;
+					}
+					if(this.infos.serviceInfo&&this.infos.serviceInfo[0].serviceId==1){
+						this.isService = true;
+						this.zhijianZixunPic = data.serviceInfo[0].picUrl;
+						this.zhijianZixunLink = handleImg.handleSingle(data.serviceInfo[0].mUrl);
+					}else{
+						this.isService = false;
+					}
+					//后台接口写好以后，把经纬度字段作为参数传进来。
+					getrecommendforvisit({ infoid: this.infoId, metric: this.metric, lon: lontitude, lat: latitude }).then( response => {
+						console.log('getrecommendforvisit',response.data.respData);
+						this.handleRecomVisit(response);
+					});
+					queryTags({getUid:this.infos.uid}).then(response=>{
+						if(response.status&&response.data&&response.data.respCode == 0){
+								this.dredgeZhima = response.data.respData.zhima;
+						}
+					})
+				}else{
+					this.isSoldout = true;
+				}
 			},
-			deactivate(){
-				this.sendMaidian(this.maidianCount)
+			handleRecomVisit(response){
+				if(response.status && response.data && response.data.respCode == 0){
+
+					if (this.isTrade){
+						let stack1 = [], stack2 = [];
+						_.each(response.data.respData.infos, (item, index) => {
+							let disnum = parseInt(item.distance, 10);
+							if (disnum >= 0){
+								stack1.push(item)
+							}else {
+								stack2.push(item)
+							}
+						})
+						if(stack1.length >= 8){
+						 //_.filter循环的函数一定要return值出来。
+						 this.recommends =	_.chain(stack1)
+							 .map(item => { item.distance = parseInt(item.distance, 10); return item; })
+							 .sortBy("distance")
+							 .filter((item, index) => {
+								return index < 8;
+							 })
+							 .value()
+						}else {
+							this.recommends =	_.chain(stack1)
+								 .map(item => { item.distance = parseInt(item.distance, 10); return item; })
+								 .sortBy("distance")
+								 .concat(stack2)
+								 .filter((item, index) => {
+									return index < 8;
+								 })
+								 .value()
+						}
+						//this.recommends = !!response.data.respData.infos[0].distance?_.chain(response.data.respData.infos).map(item => { item.distance = parseInt(item.distance, 10); return item; }).sortBy("distance").reverse().filter((item, index) => (index < 8)).value() : _.filter(response.data.respData.infos, (item, index) => (index < 8));
+					}else {
+						this.recommends = _.filter(response.data.respData.infos, (item, index) => (index < 8));
+					}
+				}
+			},
+			getPro(){
+				getProduct({ infoId:this.infoId, metric: this.metric }).then(response => {
+					this.handleInfoId(response);
+        });
+			},
+			getInCom(){
+				getInfoComments(this.infoId).then(response => {
+        	if(response.status && response.data && response.data.respCode == 0){
+        		var data = response.data.respData
+          	data.portrait = handleImg.handleSingle(data.portrait)
+          	this.comments = data;
+        	}
+        });
 			}
+		},
+		beforeRouteEnter(to, from, next){
+			next(vm => {
+							console.log(vm.fullPath);
+              vm.exeScroll.call(vm);
+							vm.isSoldout = false;
+							Native.setTitle({title: "转转详情页"});
+							vm.getPro();
+							vm.getInCom();
+          })
+		},
+		beforeRouteLeave(){
+			this.sendMaidian(this.maidianCount)
 		},
 		components : {
 			carousel : Carousel,
 			comment : Comment,
 			recommend : Recommend,
-			zzTip,
+			zzTip : zzTip,
 			CollectItemTip,
 			LikeItemTip
 		}

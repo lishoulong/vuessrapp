@@ -6,7 +6,7 @@
         </div>
         <div class="delivery-product">
             <div class="delivery-product-info">
-                <img :src="infos.pics.split('|')[0] | handlePic" class="delivery-product-icon" alt="">
+                <img :src="handlePic(infos.pics.split('|')[0])" class="delivery-product-icon" alt="">
                 <div class="delivery-product-meta">
                     <p class="title">
                         {{infos.title}} {{infos.content}}
@@ -86,7 +86,7 @@
 
         <div class="delivery-mutation">
             <div class="delivery-mutation-total">
-                合计<span>￥{{price}}</span>
+                合计<span>￥{{price}}=>{{price$}}</span>
             </div>
             <div class="delivery-mutation-pay" @click="btnClick">
                 确认
@@ -106,21 +106,13 @@
     @import "Delivery.less";
 </style>
 <script>
-
-    import { selectedAddr, selectedCity, defaultAddr, orderId, payType } from '../../vuex/getters'
+    alert("delivery")
     import ZhijianService from './ZhiJian/ZhiJian.vue'
     import popTips from '../Common/tips/tips.vue'
     import zzTip from '../Common/tips/tips.vue'
     import payAfterTrade from './PayAfterTrade/payAfterTrade.vue'
     import _ from 'underscore'
-    import {
-             changeDefaultAddr,
-             changeDefaultAddrMobile,
-             changeDefaultAddrName,
-             changeDefaultAddrDetail,
-             changeOrderId,
-             changePayType
-           } from '../../vuex/actions'
+    import { mapGetters } from 'vuex'
 
     import {
               getProduct,
@@ -140,28 +132,15 @@
     import {local as localStore} from '../../libs/store'
 
     import handleImg from '../../libs/handleImg'
+    import 'rxjs/add/operator/pluck'
+    import 'rxjs/add/operator/startWith'
+    import 'rxjs/add/operator/delay'
+    import 'rxjs/add/operator/map'
 
     const iosMiddleUrl = 'https://m.zhuanzhuan.58.com/Mzhuanzhuan/wbmiddle.html'
 
     export default {
         name: 'delivery',
-        vuex: {
-            getters: {
-                addr:selectedAddr,
-                selectedCity,
-                defaultAddr,
-                orderId,
-                payType
-            },
-            actions: {
-                changeDefaultAddr,
-                changeDefaultAddrMobile,
-                changeDefaultAddrName,
-                changeDefaultAddrDetail,
-                changeOrderId,
-                changePayType
-            }
-        },
         components : {
     			"zhijian-service" : ZhijianService,
           "pop-tips" : popTips,
@@ -169,7 +148,6 @@
           "zzTip" : zzTip
     		},
         data(){
-
             return {
                 faceTradeParam: {
                   visible: false,
@@ -199,26 +177,40 @@
                 prodType: false,
                 addGrey: 1,
                 price: 0
-
             }
         },
-        filters: {
-            handlePic: handleImg.handleSingle
-
+        subscriptions(){
+          return {
+            price$: this.$watchAsObservable('price')
+                    .pluck('newValue')
+                    .startWith(this.price)
+                    .map(value => value + 1)
+                    .delay(3000)
+          }
         },
         created(){
+            alert('created');
             getDefaultAddress().then( response =>{
-
                 if(response.data.respCode == 0 ){
-                    this.changeDefaultAddr(response.data.respData || {city:'',mobile:'',name: '', detail:''})
+                    this.$store.dispatch('changeDefaultAddr', response.data.respData || {city:'',mobile:'',name: '', detail:''});
                     this.defaultAddrInit = _.clone(response.data.respData || {})
                 }
             })
         },
         computed: {
+            ...mapGetters({
+              addr:'selectedAddr',
+              selectedCity:'selectedCity',
+              defaultAddr:'defaultAddr',
+              orderId:'orderId',
+              payType:'payType'
+            }),
             infoId(){
                 return this.$route.params.product_id;
             },
+            handlePic(){
+              return handleImg.handleSingle
+            } ,
             isFaceTrade(){
               const cateIds = [
       					"2105001", "2105002", "2105003", "107", "108", "2108001", "2108002", "2108003", "2108004", "2108005", "2108006", "2108007", "2108008", "2108009", "2108010", "2108011", "2108014", "2108015", "2108016", "2108017"
@@ -252,10 +244,10 @@
             },
             //created by lishoulong, change orderId;
             changeOrderName(ordername){
-              this.changeOrderId(ordername);
+              this.$store.dispatch('changeOrderId',ordername)
             },
             selectArea(){
-                this.$router.go({
+                this.$router.push({
                     name: 'city'
                 })
             },
@@ -300,23 +292,23 @@
             },
 
             clearMobile() {
-                this.changeDefaultAddrMobile('')
+                this.$store.dispatch('changeDefaultAddrMobile', '');
             },
             clearName(){
-                this.changeDefaultAddrName('')
+                this.$store.dispatch('changeDefaultAddrName', '');
             },
             clearDetail(){
-                this.changeDefaultAddrDetail('')
+                this.$store.dispatch('changeDefaultAddrDetail','');
             },
             changeMobile(e) {
-                this.changeDefaultAddrMobile(e.target.value)
+                this.$store.dispatch('changeDefaultAddrMobile',e.target.value)
             },
 
             changeName(e) {
-                this.changeDefaultAddrName(e.target.value)
+                this.$store.dispatch('changeDefaultAddrName',e.target.value)
             },
             changeDetail(e) {
-                this.changeDefaultAddrDetail(e.target.value)
+                this.$store.dispatch('changeDefaultAddrDetail',e.target.value)
             },
             addAddrAndPay(tempOrderId, tempPayId) {
               addAddress({
@@ -351,7 +343,7 @@
 
                     if(response.data.respCode == 0) {
                         //用于在通过微信支付创建订单但是不支付的情况下，确认是否像订单详情页传prodType参数。
-                        this.changePayType(2);
+                        this.$store.dispatch('changePayType',2);
                         this.addGrey = 2;
                         //添加等待的loading,截止等待loading
                         Native.setWebLog({
@@ -410,7 +402,7 @@
                                         pagetype: "zzdingdan"
                                     });
                                     clearInterval(this.timer);
-                                    _this.$router.go({
+                                    _this.$router.push({
                                         name: 'success',
                                         params: {
                                             order_id: tempOrderId
@@ -433,7 +425,7 @@
               }
               if (!!this.orderId){
                   if (this.payType == 3){
-                    this.$router.go({
+                    this.$router.push({
                       name: 'order',
                       params: {
                         order_id: this.orderId
@@ -443,7 +435,7 @@
                       }
                     })
                   }else {
-                    this.$router.go({
+                    this.$router.push({
                       name: 'order',
                       params: {
                         order_id: this.orderId
@@ -533,11 +525,11 @@
                     }
                 }).then(response => {
                     if(response.data.respCode == 0){
-                      this.changePayType(3);
+                      this.$store.dispatch('changePayType',3)
                       this.addGrey = 3;
                       let tempOrderId = response.data.respData.orderId;
                       this.changeOrderName(tempOrderId);
-                      this.$router.go({
+                      this.$router.push({
                           name: 'success',
                           params: {
                               order_id: tempOrderId,
@@ -594,7 +586,7 @@
                     }).then( response => {
 
                           if(response.data.respCode == 0) {
-                              this.changePayType(3);
+                              this.$store.dispatch('changePayType',3)
                               this.addGrey = 3;
                               Native.setWebLog({
                                   actiontype : "createsuc",
@@ -605,7 +597,7 @@
                               this.changeOrderName(respData.orderId);
                               let tempOrderId = response.data.respData.orderId;
 
-                              this.$router.go({
+                              this.$router.push({
                                   name: 'success',
                                   params: {
                                       order_id: tempOrderId,
@@ -640,7 +632,7 @@
                       };
                       createOrder(orderOption).then( response => {
                           if(response.data.respCode == 0) {
-                              this.changePayType(3);
+                              this.$store.dispatch('changePayType',3)
                               this.addGrey = 3;
                               Native.setWebLog({
                                   actiontype : "createsuc",
@@ -651,7 +643,7 @@
                               this.changeOrderName(respData.orderId);
                               let tempOrderId = response.data.respData.orderId;
 
-                              this.$router.go({
+                              this.$router.push({
                                   name: 'success',
                                   params: {
                                       order_id: tempOrderId,
@@ -734,7 +726,7 @@
 
                             if(response.data.respCode == 0) {
                                 //用于在通过微信支付创建订单但是不支付的情况下，确认是否像订单详情页传prodType参数。
-                                this.changePayType(2);
+                                this.$store.dispatch('changePayType',2);
                                 this.addGrey = 2;
                                 //添加等待的loading,截止等待loading
                                 Native.setWebLog({
@@ -794,7 +786,7 @@
                                                 pagetype: "zzdingdan"
                                             });
                                             clearInterval(this.timer);
-                                            _this.$router.go({
+                                            _this.$router.push({
                                                 name: 'success',
                                                 params: {
                                                     order_id: tempOrderId
@@ -833,7 +825,7 @@
                         createOrder(orderOption).then( response => {
 
                             if(response.data.respCode == 0) {
-                                this.changePayType(2);
+                                this.$store.dispatch('changePayType',2);
                                 this.addGrey = 2;
                                 Native.setWebLog({
                                     actiontype : "createsuc",
@@ -894,7 +886,7 @@
                                             });
 
                                             clearInterval(this.timer);
-                                            _this.$router.go({
+                                            _this.$router.push({
                                                 name: 'success',
                                                 params: {
                                                     order_id: tempOrderId
@@ -922,120 +914,131 @@
                 wxUrl = mWebUrl + '&redirect_url=' + encodeURIComponent(redirectUrl);
               }
               window.location.href = wxUrl;
-            }
-        },
-        route: {
-            data:function(){
+            },
+            initRouter(){
               this.serviceId = "";
               this.addGrey = 1;
               this.price = 0;
-              if(!!this.orderId){
-                //如果没有刷新页面用getter中的payType改变按钮状态。
-                if(this.payType == 3){
-                  this.addGrey = 3;
-                }else if(this.payType == 2){
-                  this.addGrey = 2;
+            },
+            getOrd(orderid){
+              getOrder(orderid).then( response => {
+                this.handleOrder(response);
+              })
+            },
+            handleOrder(response){
+              if(response.data.respCode == 0) {
+                  let respData = response.data.respData;
+                  if(respData.payType === 3){
+                    this.prodType = true;
+                    //为了兼容跳到优品详情页状态刷没的问题，做一层持久化。
+                    localStore.set("prodType", true);
+                    Native.setWebLog({
+                        actiontype : "dfshow",
+                        pagetype: "zzdingdan"
+                    });
+                  }else {
+                    this.prodType = localStore.get("prodType")
+                  }
+              }
+            },
+            getInFo(){
+              getInfoOrder(this.infoId).then(response =>{
+                this.handleInFo(response);
+              })
+            },
+            handleInFo(response){
+              if(response.data.respCode == 0){
+                this.prodType = response.data.respData.payTypeList.indexOf('3') > -1;
+                localStore.set("prodType", this.prodType);
+                if (this.prodType){
+                  Native.setWebLog({
+                      actiontype : "dfshow",
+                      pagetype: "zzdingdan"
+                  });
                 }
-                getOrder(this.orderId).then( response => {
+              }else if (response.data.respCode == -1) {
+                //如果是同一个商品的话，货到付款逻辑根据localStore判断。分为已下单和没有下单；
+                // 普通商品，如果没有下单的话，prodType为false，如果已下单的话，走GetOrder，拿到新的prodType状态。
+                // 优品商品，如果没有下单的话，getInfoOrder就可以拿到prodType，如果已下单的话，从详情页进来，prodType为localstore中的状态，
+                // 赋值给prodType就行了。
+                this.prodType = localStore.get("prodType")
+              }
+            },
+            getProD(){
+              getProduct({ infoId: this.infoId, metric: this.metricDelivery }).then(response => {
+                this.handleProd(response)
+              })
+            },
+            handleProd(response){
+              this.infos = response.data.respData;
+              this.oriPrice = !!this.infos.oriPrice && parseInt(this.infos.oriPrice,10) > 0 ;
+              let extraType = !!this.infos.extraData && JSON.parse(this.infos.extraData);
+              if(this.infos.type == 2 && !!this.infos.extraData && extraType.type == 1 && !!extraType.url){
+                //保存优品的详情页URL，以便从订单详情页跳到优品的商品详情页。
+                localStore.set("youpinUrl", extraType.url);
+                localStore.set("infoId", this.infoId);
+              }
+              //created by lishoulong 8/31,get the price return by getInfoById;
+              let sumPrice = parseInt(this.infos.nowPrice) + parseInt(this.infos.freigth);
+              //用来判断优品详情页过来的商品是否有orderId，如果有orderId就是本人下的单
+              if(!!this.infos.orderId && !this.orderId){
+                getOrder(this.infos.orderId).then( response => {
                     if(response.data.respCode == 0) {
                         let respData = response.data.respData;
-                        if(respData.payType === 3){
-                          this.prodType = true;
-                          //为了兼容跳到优品详情页状态刷没的问题，做一层持久化。
-                          localStore.set("prodType", true);
-                          Native.setWebLog({
-                              actiontype : "dfshow",
-                              pagetype: "zzdingdan"
-                          });
+                        if(respData.payType == 3){
+                          //触发改变payType的action，状态用作跳到order.vue用。
+                          this.$store.dispatch('changePayType',3);
+                          //用来改变货到付款的样式
+                          this.checkedImg = false;
+                          //用来添加置灰的按钮
+                          this.addGrey = 3;
                         }else {
-                          this.prodType = localStore.get("prodType")
+                          this.$store.dispatch('changePayType',2);
+                          //用来改变货到付款的样式
+                          this.checkedImg = true;
+                          this.addGrey = 2;
                         }
                     }
                 })
-                  this.isGrey = true;
-              }else {
-                getInfoOrder(this.infoId).then(response =>{
-                  if(response.data.respCode == 0){
-                    this.prodType = response.data.respData.payTypeList.indexOf('3') > -1;
-                    localStore.set("prodType", this.prodType);
-                    if (this.prodType){
-                      Native.setWebLog({
-                          actiontype : "dfshow",
-                          pagetype: "zzdingdan"
-                      });
-                    }
-                  }else if (response.data.respCode == -1) {
-                    //如果是同一个商品的话，货到付款逻辑根据localStore判断。分为已下单和没有下单；
-                    // 普通商品，如果没有下单的话，prodType为false，如果已下单的话，走GetOrder，拿到新的prodType状态。
-                    // 优品商品，如果没有下单的话，getInfoOrder就可以拿到prodType，如果已下单的话，从详情页进来，prodType为localstore中的状态，
-                    // 赋值给prodType就行了。
-                    //if((!!this.infoId && this.infoId == localStore.get("infoId")) || ){
-                    this.prodType = localStore.get("prodType")
-
-                  }
-                });
               }
-               getProduct({ infoId: this.infoId, metric: this.metricDelivery }).then(response => {
-                    this.infos = response.data.respData;
-                    this.oriPrice = !!this.infos.oriPrice && parseInt(this.infos.oriPrice,10) > 0 ;
-                    let extraType = !!this.infos.extraData && JSON.parse(this.infos.extraData);
-                    if(this.infos.type == 2 && !!this.infos.extraData && extraType.type == 1 && !!extraType.url){
-        							//保存优品的详情页URL，以便从订单详情页跳到优品的商品详情页。
-        							localStore.set("youpinUrl", extraType.url);
-                      localStore.set("infoId", this.infoId);
-        						}
-                    //created by lishoulong 8/31,get the price return by getInfoById;
-                    let sumPrice = parseInt(this.infos.nowPrice) + parseInt(this.infos.freigth);
-                    //用来判断优品详情页过来的商品是否有orderId，如果有orderId就是本人下的单
-                    if(!!this.infos.orderId && !this.orderId){
-                      getOrder(this.infos.orderId).then( response => {
-                          if(response.data.respCode == 0) {
-                              let respData = response.data.respData;
-                              if(respData.payType == 3){
-                                //触发改变payType的action，状态用作跳到order.vue用。
-                                this.changePayType(3);
-                                //用来改变货到付款的样式
-                                this.checkedImg = false;
-                                //用来添加置灰的按钮
-                                this.addGrey = 3;
-                              }else {
-                                this.changePayType(2);
-                                //用来改变货到付款的样式
-                                this.checkedImg = true;
-                                this.addGrey = 2;
-                              }
-                          }
-                      })
-                    }
-                    this.changeZhijian(sumPrice);
-                    //orderId在route中用来判断是否已经下单了，如果下单的话，就把质检按钮置灰。
-                    this.changeOrderName(this.infos.orderId);
-                    if(this.infos.serviceInfo && this.infos.serviceInfo[0].serviceId==1){
-                        this.serviceId='1';
-                    }
-                    //this.serviceId = this.infos.serviceInfo && this.infos.serviceInfo[0].serviceId==1 && this.infos.serviceInfo[0].serviceId;
-                    //created by lishoulong 8/31
-                    if(response.data.respData.serviceInfo!==undefined) {
-                       getZhiJian(this.infoId).then(response =>{
-                         this.zhijianData = response.data.respData.availableServices[0];
-                         this.tipForSelected = this.zhijianData.tipForSelectState.tipForSelected;
-                         this.tipForUnselected = this.zhijianData.tipForSelectState.tipForUnselected;
-                         this.changeZhijian(parseInt(this.zhijianData.nowPrice));
-                       })
-                    }
-                })
-            },
-            activate() {
-                Native.setTitle({title: "订单确认"});
-                Native.setWebLog({
-                    actiontype : "show",
-                    pagetype: "zzdingdan"
-                });
-                document.body.style.backgroundColor = "#eeeeee"
-            },
-            deactivate() {
-                document.body.style.backgroundColor = ""
+              this.changeZhijian(sumPrice);
+              //orderId在route中用来判断是否已经下单了，如果下单的话，就把质检按钮置灰。
+              this.changeOrderName(this.infos.orderId);
+              if(this.infos.serviceInfo && this.infos.serviceInfo[0].serviceId==1){
+                  this.serviceId='1';
+              }
+              //this.serviceId = this.infos.serviceInfo && this.infos.serviceInfo[0].serviceId==1 && this.infos.serviceInfo[0].serviceId;
+              //created by lishoulong 8/31
+              if(response.data.respData.serviceInfo!==undefined) {
+                 getZhiJian(this.infoId).then(response =>{
+                   this.zhijianData = response.data.respData.availableServices[0];
+                   this.tipForSelected = this.zhijianData.tipForSelectState.tipForSelected;
+                   this.tipForUnselected = this.zhijianData.tipForSelectState.tipForUnselected;
+                   this.changeZhijian(parseInt(this.zhijianData.nowPrice));
+                 })
+              }
             }
+        },
+        beforeRouteEnter(to, from, next){
+    			next(vm => {
+    							console.log(vm.fullPath);
+                  if(!!vm.orderId){
+                    //如果没有刷新页面用getter中的payType改变按钮状态。
+                    if(vm.payType == 3){
+                      vm.addGrey = 3;
+                    }else if(vm.payType == 2){
+                      vm.addGrey = 2;
+                    }
+                    vm.getOrd(vm.orderId);
+                    this.isGrey = true;
+                  }else {
+                    vm.getInFo();
+                  }
+                  vm.getProD();
+            })
+          },
+          beforeDestroy() {
+              document.body.style.backgroundColor = ""
+          }
         }
-    }
 </script>

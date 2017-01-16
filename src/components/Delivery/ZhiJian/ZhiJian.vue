@@ -1,9 +1,10 @@
 <template>
+  <div>
     <!--质检服务-->
     <p class="specialservice_title">特色服务</p>
     <div class="specialservice_cont">
-      <div v-if="zhijianData.selectType==1" class="chooseBtn"  v-el="check-btn" @click.prevent="checkOrNot()">
-        <span v-bind:class="{ 'choose': isChoosed,'greyBtn': isGrey}" serviceId="{{zhijianData.serviceId}}"></span>
+      <div v-if="zhijianData.selectType==1" class="chooseBtn"  ref="check-btn" @click.prevent="checkOrNot()">
+        <span v-bind:class="{ 'choose': isChoosed,'greyBtn': isGrey}" v-bind:serviceId="zhijianData.serviceId"></span>
       </div>
       <div>
         <p>
@@ -52,8 +53,8 @@
           </ul>
       </div>
       <div class="zjip_closebtn" @click="removeWenan()"></div>
+    </div>
   </div>
-
 </template>
 <style lang="less">
 	@import "ZhiJian.less";
@@ -72,7 +73,7 @@
               if (this.isGrey){
                 return
               }
-              var chooseBtnSpan=this.$els.checkBtn;
+              var chooseBtnSpan=this.$refs.checkBtn;
               if(this.isChoosed){
                 this.isChoosed = false;
                 this.$parent.changeZhijian(-parseInt(this.zhijianData.nowPrice));

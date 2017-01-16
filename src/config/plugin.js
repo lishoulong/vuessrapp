@@ -5,12 +5,18 @@ import Resource from 'vue-resource'
 import VueTouch from 'vue-touch'
 import Router from 'vue-router'
 import Vuex from 'vuex'
+import store from '../vuex/store'
 import App from '../App.vue'
 import VueInfiniteScroll from 'vue-infinite-scroll'
 import VueLazyLod from 'vue-lazyload'
 import Native from '../libs/native.js'
 import {local as localStore} from '../libs/store'
 import Cookies from '../libs/cookie'
+import login from '../mixin/login'
+import * as filters from  '../filters'
+import VueRx from 'vue-rx'
+import { Observable } from 'rxjs/Observable'
+import { Subscription } from 'rxjs/Subscription'
 
 var plugin = {
 	init(){
@@ -28,7 +34,8 @@ var plugin = {
 		Vue.use(VueLazyLod, {
 			preLoad: 1.3,
 			try: 2
-		})
+		});
+		Vue.use(VueRx, { Observable, Subscription });
 	},
 	resourceGlobalSetting() {
 		Vue.http.options.root = "//zhuan.58.com/zz/transfer";
@@ -41,7 +48,7 @@ var plugin = {
 				route = app.$route;
 
 				if( -8 == code ) {
-					if( route.auth ){
+					if( route.meta.auth ){
 						app.auth(route );
 					}
 				}
@@ -51,165 +58,193 @@ var plugin = {
 	},
 	runRouter() {
 		var routeMap = this.createRouteMap();
-
 		var routerOpts =  {
-			hashbang : false,
-			history : true,
-			saveScrollPosition: true,
-			root : '/Mzhuanzhuan/zz58app'
+
 		};
-		var router = this.router = new Router(routerOpts);
+		var router = this.router = new Router({
+			mode:'history',
+			scrollBehavior: function (to, from, savedPosition) {
+			  return savedPosition || { x: 0, y: 0 }
+			},
+			base : '/Mzhuanzhuan/zz58app/',
+			routes: routeMap
+		});
 
 		router.beforeEach(this.beforeEach.bind(router));
 		router.afterEach(this.afterEach.bind(router));
-
-		router.map(routeMap);
+		// register global utility filters.
+		Object.keys(filters).forEach(key => {
+		  Vue.filter(key, filters[key])
+		})
 		//router.redirect({'/': '/mine'});
-		router.start(App,"#app");
+		new Vue({
+		  el: '#app',
+		  router,
+			store,
+			//mixins: [login]
+		  // replace the content of <div id="app"></div> with App
+		  render: h => h(App)
+		})
 	},
 	createRouteMap() {
-		var map = {
-
-			'/detail/:product_id': {
+		return [
+      {
+			  path:'/detail/:product_id',
 				name: 'detail',
 				component (resolve) {
 					require(['../components/Detail/Detail.vue'], resolve);
 				}
 			},
-			'/delivery/:product_id': {
+			{
+			  path:'/delivery/:product_id',
 				name: 'delivery',
-				auth: true,
+				meta: {auth: true},
 				component (resolve) {
+					alert('deli');
 					require(['../components/Delivery/Delivery.vue'], resolve);
 				}
 			},
-			'/payquery': {
+			{
+			  path:'/payquery',
 				name: 'payquery',
 				component (resolve) {
 					require(['../components/PayQuery/PayQuery.vue'], resolve);
 				}
 			},
-			'/delivery/city': {
+			{
+			  path: '/delivery/city',
 				name: 'city',
-				auth: true,
+				meta: {auth: true},
 				component (resolve) {
 					require(['../components/Address/City.vue'], resolve);
 				}
 			},
-			'/delivery/area/:city_id': {
+			{
+			  path: '/delivery/area/:city_id',
 				name: 'area',
-				auth: true,
+				meta: {auth: true},
 				component (resolve) {
 					require(['../components/Address/Area.vue'], resolve);
 				}
 			},
-			'/success/:order_id': {
+			{
+			  path: '/success/:order_id',
 				name: 'success',
-				auth: true,
+				meta: {auth: true},
 				component (resolve) {
 					require(['../components/Success/Success.vue'], resolve);
 				}
 			},
-			'/order/:order_id': {
+			{
+			  path: '/order/:order_id',
 				name: 'order',
-				auth: true,
+				meta: {auth: true},
 				component (resolve) {
 					require(['../components/Order/Order.vue'], resolve);
 				}
 			},
-			'/mine': {
+			{
+			  path: '/mine',
 				name: 'mine',
-				auth: true,
+				meta: {auth: true},
 				component (resolve) {
 					require(['../components/Mine/Mine.vue'], resolve);
 				}
 			},
-			'/message/chat': {
+			{
+			  path: '/message/chat',
 				name: 'chat',
-				auth: true,
+				meta: {auth: true},
 				component (resolve) {
+					alert('chat');
 					require(['../components/MessageChat/MessageChat.vue'], resolve);
 				}
 			},
-			'/message/chat/:user_id/:product_id': {
+			{
+			  path: '/message/chat/:user_id/:product_id',
 				name: 'dialog',
-				auth: true,
+				meta: {auth: true},
 				component (resolve) {
 					require(['../components/Dialog/Dialog.vue'], resolve);
 				}
 			},
-			'/message/order': {
+			{
+			  path: '/message/order',
 				name: 'message-order',
-				auth: true,
+				meta: {auth: true},
 				component (resolve) {
 					require(['../components/MessageOrder/MessageOrder.vue'], resolve);
 				}
 			},
-			'/message/system': {
+			{
+			  path: '/message/system',
 				name: 'message-system',
-				auth: true,
+				meta: {auth: true},
 				component (resolve) {
 					require(['../components/MessageSystem/MessageSystem.vue'], resolve);
 				}
 			},
-			'/help': {
+			{
+			  path: '/help',
 				name: 'help',
 				component (resolve) {
 					require(['../components/Help/Help.vue'], resolve);
 				}
 			},
-			'/help/:type': {
+			{
+			  path: '/help/:type',
 				name: 'helper',
 				component (resolve) {
 					require(['../components/Help/Help.vue'], resolve);
 				}
 			},
-			'/profile/:user_id': {
+			{
+			  path: '/profile/:user_id',
 				name: 'profile',
 				//auth: true,
 				component (resolve) {
 					require(['../components/Profile/Profile.vue'], resolve);
 				}
 			},
-			'/login': {
+			{
+			  path: '/login',
 				name: 'login',
 				component (resolve) {
 					require(['../components/Login/Login.vue'], resolve);
 				}
 			},
-			'/quit': {
+			{
+			  path: '/quit',
 				name: 'quit',
 				component (resolve) {
 					require(['../components/Quit/Quit.vue'], resolve);
 				}
 			}
-		}
-		return map;
+		]
 	},
-	beforeEach( transition ) {
-		var to = transition.to,
-		    query = to.query || {},
-		  	app = to.router.app;
-		if(transition.to.name != 'mine'){
+	beforeEach( to, from, next ) {
+	  var query = to.query || {},
+		  	app = login.methods;
+		if(to.name != 'mine'){
 			document.body.scrollTop = 0
 		}
 		if(Cookies.get("PPU") !== (!!localStore.get("PPU") && localStore.get("PPU"))){
-			Cookies.remove(Cookies.COOKIE_ZZU,Cookies.COOKIE_OPTION);
+			//Cookies.remove(Cookies.COOKIE_ZZU,Cookies.COOKIE_OPTION);
 		}
-		if( to.auth && !app.isLogin() ){
-			if(!transition.from.path && transition.to.name != 'delivery'){
-				transition.from.path = '/mine';
+		if( to.matched.some(m => (m.meta.auth && !app.isLogin())) ){
+			if(!from.path && to.name != 'delivery'){
+				from.path = '/mine';
 			}
-			transition.abort();
+			next(false);
 			app.auth(to, () => {
-				transition.next()
-				app.$router.go({
+				next()
+				this.app.$router.push({
 					name: to.name,
 					params: to.params,
 					query: query
 				})
 
-				if(transition.from.name == 'detail' && transition.to.name == 'delivery') {
+				if(from.name == 'detail' && to.name == 'delivery') {
 					Native.setWebLog({
 						actiontype: "buyactivewxsuc",
 		        		pagetype: "zzdetail",
@@ -217,7 +252,7 @@ var plugin = {
 				}
 			})
 		}else{
-			transition.next()
+			next()
 		}
 	},
 	afterEach( transition ) {

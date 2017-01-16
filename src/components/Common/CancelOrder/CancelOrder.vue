@@ -1,5 +1,6 @@
 <template>
-    <zz-tip :visible.sync="isShow" :tipsparam.sync="cancelTipParam" slide="top">
+  <div>
+    <zz-tip :visible="isShow" :tipsparam="cancelTipParam" slide="top" v-on:change="updateValue($event.target.value)">
         <div class="cancel">
             <ul>
                 <li v-for="reason in cancelReasons" @click="cancelOrder(reason)">
@@ -12,7 +13,8 @@
         </div>
     </zz-tip>
 
-    <zz-tip :visible.sync="showLoading" :tipsparam.sync="loadingTipParam"></zz-tip>
+    <zz-tip :visible="showLoading" :tipsparam="loadingTipParam"></zz-tip>
+  </div>
 </template>
 <style lang="less">
     @import "CancelOrder.less";

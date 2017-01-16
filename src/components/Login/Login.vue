@@ -17,7 +17,7 @@
 				</div>
 				<div class="login-form-row" >
 					<i class="lock"></i>
-					<input @input="inputCode" type="text" v-model="code" placeholder="请输入短信验证码" number>
+					<input @input="inputCode" type="text" v-model.number="code" placeholder="请输入短信验证码" >
 				</div>
 			</div>
 		</div>
@@ -134,7 +134,7 @@
 
 
 
-						this.$router.go({
+						this.$router.push({
 							name: this.redirect.name,
 							params:this.redirect.params,
 							replace: true
@@ -186,7 +186,7 @@
 
               alert('登录成功')
 
-              this.$router.go({
+              this.$router.push({
               	name: this.redirect.name,
               	params:this.redirect.params,
               	replace: true
@@ -211,7 +211,7 @@
 				Native.setTitle({ title: "登录" });
 				Native.extendRightBtn("top_right", "帮助中心", "openHelpCenter");
 				window.openHelpCenter = () => {
-					return this.$router.go({
+					return this.$router.push({
 						name: 'help'
 					});
 				};
@@ -221,13 +221,13 @@
 			data(){
 				this.setHeader();
 			},
-			activate() {
+			beforeRouteEnter() {
 				Native.setWebLog({
 						actiontype: "mobileLogin",
 						pagetype: "zzlogin",
 					})
 			},
-			deactivate: function (transition) {
+			beforeDestroy: function (transition) {
 				Native.extendRightBtn("top_right", " ", "righthelpCallback");
 				window.righthelpCallback = () => { };
 				transition.next();

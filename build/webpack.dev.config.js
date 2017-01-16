@@ -10,6 +10,7 @@
      devtool : 'source-map',
      debug : true,
      devServer : {
+         https: true,
          noInfo: true,
          historyApiFallback: true
      }

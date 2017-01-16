@@ -1,10 +1,10 @@
 <template>
     <div class="city">
        <div class="city-wrap">
-           <div v-for="(key,value) in cityList" class="select-city">
-               <h4 class="city-word" id="{{key}}">{{key}}</h4>
+           <div v-for="(value,key) in cityList" class="select-city">
+               <h4 class="city-word" v-bind:id="key">{{key}}</h4>
                <div class="ciy-item-wrap">
-                   <div  @click="selectArea(city)" v-for="city in value" data-id="{{city.localId}}" class="ciy-item">
+                   <div  @click="selectArea(city)" v-for="city in value"  v-bind:data-id="city.localId" class="ciy-item">
                        {{city.localName}}
                    </div>
                </div>
@@ -17,10 +17,11 @@
                    </li>
                </ul>
            </div>
-
-           <div v-show="showCenterIndex" transition="appear" id="centerWord" class="screen-center">
-               {{currentIndex}}
-           </div>
+           <transition name="appear">
+             <div v-show="showCenterIndex" id="centerWord" class="screen-center">
+                 {{currentIndex}}
+             </div>
+           </transition>
        </div>
     </div>
 </template>
@@ -34,7 +35,7 @@
   import { selectCity }  from '../../vuex/actions'
 
 	export default {
-    
+
 		data () {
 			return {
 	             words : ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"],
@@ -43,7 +44,7 @@
 				showCenterIndex : false,
 	            cityid:1,
 	            city_name:''
-			}  
+			}
 		},
 		created () {
 			this.$http.jsonp('getDispLocalByParentId',{
@@ -91,7 +92,7 @@
         		}
 
         		var scrollTarget = document.getElementById(index.innerText);
-        		
+
         		if(scrollTarget) {
         			var scrollHeight = this.getElementViewTop(scrollTarget) + parseInt(document.documentElement.scrollTop) - window.screen.availHeight / 2
         			document.body.scrollTop = scrollHeight;
@@ -116,14 +117,14 @@
     　　　if (document.compatMode == "BackCompat"){
     　　　　　var elementScrollTop = document.body.scrollTop;
     　　　} else {
-    　　　　　var elementScrollTop = document.documentElement.scrollTop; 
+    　　　　　var elementScrollTop = document.documentElement.scrollTop;
     　　　}
     　　　return actualTop - elementScrollTop;
         },
       selectArea (city) {
 
           this.selectCity(city)
-        	this.$router.go({
+        	this.$router.push({
         		name: 'area',
             params: { city_id: city.localId }
         	})

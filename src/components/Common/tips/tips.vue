@@ -1,42 +1,44 @@
 <template>
-  <div class="zz-tips-bg" v-if="visible && slide!='down' && tipsparam.cover!=false" @click="cancel" v-touch:pan.stop></div>
+  <div>
+    <div class="zz-tips-bg" v-if="visible && slide!='down' && tipsparam.cover!=false" @click="cancel" v-touch:pan.stop></div>
 
-  <div class="zz-tips" v-if="visible && tipsparam.type != 'slide'" v-touch:pan.stop>
+    <div class="zz-tips" v-if="visible && tipsparam.type != 'slide'" v-touch:pan.stop>
 
-    <div class="zz-tips-confirm" v-if="tipsparam.type=='confirm'">
-        <h3>{{tipsparam.title | defaultValue '提示'}}</h3>
-        <div class="tips-content">{{tipsparam.content}}</div>
-        <div v-if="tipsparam.contentBr" class="tips-content">{{tipsparam.contentBr}}</div>
-        <div class="tips-btns" v-if="tipsparam.btn==1">
-            <p class="tips-oneBtn" @click="confirm">{{tipsparam.rightBtn | defaultValue '确认'}}</p>
-        </div>
-        <div class="tips-btns" v-else>
-            <p class="tips-leftBtn" @click="cancel">{{tipsparam.leftBtn | defaultValue '取消'}}</p>
-            <p class="tips-rightBtn" @click="confirm">{{tipsparam.rightBtn | defaultValue '确认'}}</p>
-        </div>
-        <i class="tips-close" v-if="tipsparam.showX" @click="closePage"></i>
+      <div class="zz-tips-confirm" v-if="tipsparam.type=='confirm'">
+          <h3>{{tipsparam.title | defaultValue('提示')}}</h3>
+          <div class="tips-content">{{tipsparam.content}}</div>
+          <div v-if="tipsparam.contentBr" class="tips-content">{{tipsparam.contentBr}}</div>
+          <div class="tips-btns" v-if="tipsparam.btn==1">
+              <p class="tips-oneBtn" @click="confirm">{{tipsparam.rightBtn | defaultValue('确认')}}</p>
+          </div>
+          <div class="tips-btns" v-else>
+              <p class="tips-leftBtn" @click="cancel">{{tipsparam.leftBtn | defaultValue('取消')}}</p>
+              <p class="tips-rightBtn" @click="confirm">{{tipsparam.rightBtn | defaultValue('确认')}}</p>
+          </div>
+          <i class="tips-close" v-if="tipsparam.showX" @click="closePage"></i>
+      </div>
+
+      <div class="zz-tips-toast" v-if="tipsparam.type == 'toast'">
+          <p class="failImg" v-show="tipsparam.toastType == 'fail'"></p>
+          <p class="successImg" v-show="tipsparam.toastType == 'success'"></p>
+          <div class="toastContent">{{tipsparam.content}}</div>
+      </div>
+
+      <div class="zz-tips-loading" v-if="tipsparam.type=='loading'">
+          <p class="loadingImg"></p>
+          <div class="loadingContent">{{tipsparam.content | defaultValue('载入中...')}}</div>
+      </div>
     </div>
 
-    <div class="zz-tips-toast" v-if="tipsparam.type == 'toast'">
-        <p class="failImg" v-show="tipsparam.toastType == 'fail'"></p>
-        <p class="successImg" v-show="tipsparam.toastType == 'success'"></p>
-        <div class="toastContent">{{tipsparam.content}}</div>
+    <div class="zz-tips-dialog"  v-show="visible && tipsparam.type=='dialog'" :style="tipsparam.style">
+        <div class="zz-tips-dialog-title">{{tipsparam.title | defaultValue('提示')}}</div>
+        <div class="zz-tips-dialog-content"><slot></slot></div>
+        <i class="zz-tips-dialog-close" v-if="tipsparam.showX" @click="closePage"></i>
     </div>
 
-    <div class="zz-tips-loading" v-if="tipsparam.type=='loading'">
-        <p class="loadingImg"></p>
-        <div class="loadingContent">{{tipsparam.content | defaultValue '载入中...'}}</div>
+    <div class="zz-tips-slide" v-if="visible && tipsparam.type=='slide'" :class="[slide ? 'zz-tips-' + slide : '']" :transition="transitionName">
+      <slot></slot>
     </div>
-  </div>
-
-  <div class="zz-tips-dialog"  v-show="visible && tipsparam.type=='dialog'" :style="tipsparam.style | dialogStyle">
-      <div class="zz-tips-dialog-title">{{tipsparam.title | defaultValue '提示'}}</div>
-      <div class="zz-tips-dialog-content"><slot></slot></div>
-      <i class="zz-tips-dialog-close" v-if="tipsparam.showX" @click="closePage"></i>
-  </div>
-
-  <div class="zz-tips-slide" v-if="visible && tipsparam.type=='slide'" :class="[slide ? 'zz-tips-' + slide : '']" :transition="transitionName">
-    <slot></slot>
   </div>
 </template>
 <style lang="less">
@@ -47,10 +49,6 @@
     props:{
       visible:Boolean,
       tipsparam:Object,
-      transitionName:{
-        type: String,
-        default: 'zz-slide'
-      },
       slide:{
         type: String,
         default: 'top'
@@ -64,10 +62,15 @@
     filters:{
         defaultValue(val, key){
           return !val ? key: val;
-        },
-        dialogStyle(val){
-            return val ? val: {};
         }
+    },
+    computed: {
+      dialogStyle(val){
+          return val ? val: {};
+      },
+      transitionName(){
+        return (this.animate === 'false') ? '' : 'zz-slide-'+this.slide;
+      }
     },
     watch:{
       visible(){
@@ -100,10 +103,10 @@
         this.visible = false;
       }
     },
-    compiled(){
-      if(this.slide){
-        this.transitionName = (this.animate === 'false') ? '' : 'zz-slide-'+this.slide;
-      }
+    mounted(){
+      // if(this.slide){
+      //   this.transitionName = this.computeTrans;
+      // }
     }
   }
 </script>

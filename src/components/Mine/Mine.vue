@@ -2,28 +2,36 @@
 	<div class="mine">
 		<div class="message-wrap">
 			<ul class="message-body">
-				<a v-link="{ name: 'chat' }">
-					<li class="message-chat">私信<i v-show="chatNum" class="icon chat"></i></li>
-				</a>
-				<a v-link="{ name: 'message-order' }">
-					<li class="message-order">订单消息<i v-show="ordersNum" class="icon order"></i></li>
-				</a>
-				<a v-link="{ name: 'message-system' }">
-					<li class="message-system">系统消息<i v-show="systemNum" class="icon system"></i></li>
-				</a>
+				<li class="message-chat">
+					<router-link :to="{ name: 'chat' }">私信
+						<i v-show="chatNum" class="icon chat"></i>
+					</router-link>
+				</li>
+				<li class="message-order">
+					<router-link :to="{ name: 'message-order' }">订单消息
+						<i v-show="ordersNum" class="icon order"></i>
+					</router-link>
+				</li>
+				<li class="message-system">
+					<router-link :to="{ name: 'message-system' }">
+						系统消息<i v-show="systemNum" class="icon system"></i>
+					</router-link>
+				</li>
 			</ul>
 		</div>
 
 		<div class="all-orders" v-show="orders.length">
-			<div class="order-top-banner" v-if="topBanner" transition="expand">{{topBanner}}</div>
+			<transition name="expand">
+				<div class="order-top-banner" v-if="topBanner">{{topBanner}}</div>
+			</transition>
 			<div class="order pending-order" v-if="pendingOrders.length">
 				<dl>
 					<dt>正在进行中的订单</dt>
 					<dd v-for="order in pendingOrders" :id="order.orderId">
-						<a v-link="{name: 'order', params: {order_id: order.orderId}, query: {typelistcomeBot: order.payType} }">
+						<router-link to="{name: 'order', params: {order_id: order.orderId}, query: {typelistcomeBot: order.payType} }">
 							<div class="order-title">
 								<div class="status">{{order.statusInfo}}</div>
-								<div v-if="order.serviceIcon" class="zhijianicon"><img :src="order.serviceIcon | imgUrl" /></div>
+								<div v-if="order.serviceIcon" class="zhijianicon"><img :src="imgUrl(order.serviceIcon)" /></div>
 								<div class="isPay">{{order.statusDescription}}</div>
 							</div>
 							<div class="order-content">
@@ -35,14 +43,18 @@
 								</div>
 							</div>
 							<div v-if="order.hasOwnProperty('availableServices')" class="order-buttons">
-								<div class="button" @click.stop.prevent="securePayment(order)"><a v-link="{name: 'dialog', params: {user_id: order.userId, product_id:order.infoId}}">联系卖家</a></div>
+								<div class="button" @click.stop.prevent="securePayment(order)">
+										<router-link to="{name: 'dialog', params: {user_id: order.userId, product_id:order.infoId}}">
+											联系卖家
+										</router-link>
+								</div>
 								<div v-if="order.status==1" class="button" @click.stop.prevent="securePayment(order)">安心支付</div>
 							</div>
 							<div v-else class="order-buttons">
 								<div class="button" @click.stop.prevent="btnTextRight(order)">{{order.btnTextRight}}</div>
 								<div class="button" @click.stop.prevent="btnTextLeft(order)">{{order.btnTextLeft}}</div>
 							</div>
-						</a>
+						</router-link>
 					</dd>
 				</dl>
 			</div>
@@ -50,10 +62,10 @@
 				<dl>
 					<dt>已完成的订单</dt>
 					<dd v-for="order in completeOrders" :id="order.orderId">
-						<a v-link="{name: 'order', params: {order_id: order.orderId}, query: {typelistcomeBot: order.payType}}">
+						<router-link to="{name: 'order', params: {order_id: order.orderId}, query: {typelistcomeBot: order.payType}}">
 							<div class="order-title">
 								<div class="status">{{order.statusInfo}}</div>
-								<div v-if="order.serviceIcon" class="zhijianicon"><img :src="order.serviceIcon | imgUrl" /></div>
+								<div v-if="order.serviceIcon" class="zhijianicon"><img :src="imgUrl(order.serviceIcon)" /></div>
 								<div class="isPay"></div>
 							</div>
 							<div class="order-content">
@@ -65,18 +77,22 @@
 								</div>
 							</div>
 							<div v-if="order.hasOwnProperty('availableServices')" class="order-buttons">
-								<div class="button" @click.stop.prevent="securePayment(order)"><a v-link="{name: 'dialog', params: {user_id: order.userId, product_id:order.infoId}}">联系卖家</a></div>
+								<div class="button" @click.stop.prevent="securePayment(order)">
+									<router-link to="{name: 'dialog', params: {user_id: order.userId, product_id:order.infoId}}">
+										联系卖家
+									</router-link>
+								</div>
 							</div>
 							<div v-else class="order-buttons">
 								<div class="button" @click.stop.prevent="btnTextRight(order)" v-if="order.btnTextRight && (order.btnTextLeft || !(order.status == 17) || !(order.payType == 3))">{{order.btnTextRight}}</div>
 								<div class="button" @click.stop.prevent="btnTextLeft(order)" v-if="order.btnTextLeft">{{order.btnTextLeft}}</div>
 								<div class="button" v-if="(!order.btnTextLeft && !order.btnTextRight) || (order.btnTextRight && !order.btnTextLeft && (order.status == 17) && (order.payType == 3))">
-									<a  v-if="order.payType != 3 && !(order.userNickName == '转转优品')" v-link="{name: 'dialog', params: {user_id: order.userId, product_id:order.infoId}}">{{order.btnTextContract}}</a>
+									<router-link  v-if="order.payType != 3 && !(order.userNickName == '转转优品')" to="{name: 'dialog', params: {user_id: order.userId, product_id:order.infoId}}">{{order.btnTextContract}}</router-link>
 									<a  v-if="order.payType == 3 || order.userNickName == '转转优品'" href="//m.zhuanzhuan.58.com/Mzhuanzhuan/zzYoupin/issues/issue_index.html">{{order.btnTextContract}}</a>
 								</div>
 								<div class="button"></div>
 							</div>
-						</a>
+						</router-link>
 					</dd>
 				</dl>
 			</div>
@@ -86,7 +102,7 @@
 		<recommend :recommends="recommends" title="还没有买到任何宝贝，快来看看吧" v-show="!orders.length"></recommend>
 		<zz-tip :visible.sync="showLoading" :tipsparam.sync="loadingTipParam"></zz-tip>
 		<zz-tip :visible.sync="showRemindOrder" :tipsparam.sync="remindOrderParam"></zz-tip>
-		<cancel-order :is-show.sync="showCancelOrder" :order-id="order.orderId" :callback="cancelOrderCallback"></cancel-order>
+		<cancel-order :is-show="showCancelOrder" :order-id="order.orderId" :callback="cancelOrderCallback"></cancel-order>
 		<!--<bottom-download v-if="!hideDownload" title="下载转转APP 订单管理更方便"></bottom-download>-->
 	</div>
 </template>
@@ -420,7 +436,7 @@
 				Native.setTitle({ title: "我的转转" });
 				Native.extendRightBtn("top_right", "帮助中心", "openHelpCenter");
 				window.openHelpCenter = () => {
-					return this.$router.go({
+					return this.$router.push({
 						name: 'help'
 					});
 				};
@@ -451,9 +467,6 @@
 			}
 		},
 		filters:{
-			imgUrl(name){
-				return handleImg.handleSingle(name,62,62);
-			},
 			price(price){
 				return "￥" + price;
 			},
@@ -465,7 +478,7 @@
 				return decodeURIComponent(urls.split('|')[0]);
 			}
 		},
-		ready(){
+		mounted(){
 			this.getBuyOrders().then(resp => {
 				if(resp.status && resp.data && resp.data.respCode == "0"){
 					this.orders = resp.data.respData;
@@ -490,11 +503,11 @@
 				}
 			});
 		},
-		route: {
-			data: function (transition) {
-				this.setHeader();
-				document.addEventListener('scroll', this.scrollPage, false);
-				const _this = this;
+		beforeRouteEnter(to, from, next){
+			next(vm => {
+				vm.setHeader();
+				document.addEventListener('scroll', vm.scrollPage, false);
+				const _this = vm;
 				Chat.login()
 						.then(resp => {
 							//_this.chatTip(_this.chatList);
@@ -502,28 +515,26 @@
 							//_this.systemTip();
 
 							Chat.msg_offline({
-								start_time:this.start_time,
-								start_id:this.start_id,
+								start_time:vm.start_time,
+								start_id:vm.start_id,
 								msgtype:10
 							}).then((resp) => {
-								return this.msg_offline(resp);
+								return vm.msg_offline(resp);
 							});
 						}, resp => {
 							//_this.$router.go({name:'login'});
 						});
-
-				transition.next();
+				})
 			},
-			deactivate: function (transition) {
+			beforeDestroy: function (transition) {
 				document.removeEventListener('scroll', this.scrollPage, false);
 				Native.extendRightBtn("top_right", " ", "righthelpCallback");
 				window.righthelpCallback = () => { };
 				transition.next();
 			},
-			canDeactivate(){
+			beforeRouteLeave(){
 				this.showLoading = false;
 			}
-		}
 	}
 	/*
 	* TODO:

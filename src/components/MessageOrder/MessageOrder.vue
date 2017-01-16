@@ -26,24 +26,26 @@
 				noMoreData: false,
 			}
 		},
-		ready(){
-			getOrderMsg({
-				pageNum: this.pageNum,
-				pageSize: this.pageSize
-			}).then(response => {
-				if(response.data.respCode == 0) {
-					var temp = response.data.respData.map(value => {
-						value.url = {
-							name: 'order',
-							params: { 'order_id': value.orderId}
-						}
+		mounted(){
+			this.$nextTick(
+				getOrderMsg({
+					pageNum: this.pageNum,
+					pageSize: this.pageSize
+				}).then(response => {
+					if(response.data.respCode == 0) {
+						var temp = response.data.respData.map(value => {
+							value.url = {
+								name: 'order',
+								params: { 'order_id': value.orderId}
+							}
 
-						return value
-					})
-					this.orderMsg = temp;
-				}
+							return value
+						})
+						this.orderMsg = temp;
+					}
 
-			});
+				})
+			)
 		},
 		methods:{
 			loadOrderMsgs() {
@@ -71,29 +73,29 @@
 							return value
 						})
 						this.orderMsg = this.orderMsg.concat(temp);
-						
+
 						this.loading = false;
 					}
 				})
-				
+
 			}
 		},
 		components:{
 			'message-item': MessageItem
 		},
 		route: {
-			activate(){
+			beforeRouteEnter(){
 				this.loading = false
 			},
 			data(){
-				
+
 				Native.setTitle({ title: "订单消息" });
 				Native.setWebLog({
 					actiontype : "dingdan",
         			pagetype: "zzmine"
 				});
 			},
-			deactivate() {
+			beforeDestroy() {
 				this.loading = true;
 			}
 		}

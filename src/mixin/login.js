@@ -204,5 +204,6 @@ const login = {
 export default {
 	methods: login,
 	created(){
+    this.login();
 	}
 }

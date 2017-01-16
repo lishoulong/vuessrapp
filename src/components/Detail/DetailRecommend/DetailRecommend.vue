@@ -1,7 +1,7 @@
 <template>
 	<div class="detail-recommend" v-if="recommends!=''">
-		<h5 v-el:h5height>相似推荐</h5>
-		<ul v-el:ulheight>
+		<h5 ref="h5height">相似推荐</h5>
+		<ul ref="ulheight">
             <li  class="detail-recommend-item" @click="toDetail(recommend)" v-for="recommend in recommends">
                 <div class="detail-recommend-item-pic" v-lazy:background-image="infoImg(recommend.pic)"></div>
 								<div class="detail-recommend-item-distance" v-if="isTrade && recommend.distance > 0">{{recommend.distance | format}}</div>
@@ -26,35 +26,21 @@
 	@import "DetailRecommend.less";
 </style>
 <script>
-    import _ from 'underscore';
-	import handleImg from '../../../libs/handleImg.js'
-
+    import _ from 'underscore'
+		import handleImg from '../../../libs/handleImg.js'
     import Native from '../../../libs/native'
-
+		import { decode,format } from '../../../filters'
     module.exports = {
         name:　"DetailRecommend",
-    	props : ["recommends","isTrade"],  // v-ref:reco-child
+	    	props : ["recommends","isTrade"],  // v-ref:reco-child
         data () {
            return{
 
            }
         },
-        ready(){
-        },
-        filters : {
-            decode(url){
-                return decodeURIComponent(url);
-            },
-						format(numbers){
-						    return numbers > 1000 ? (this.judgethedot(numbers,1000)+"km") :numbers>0?(this.judgethedot(numbers,1) + "m"):""
-						}
+        mounted(){
         },
         methods : {
-						judgethedot(numbers,value){
-								let dividevalue = (numbers/value).toString();
-								let index = dividevalue.indexOf('.') || -1;
-								return (index > -1 && dividevalue.split('.')[1].length > 1) ? dividevalue.slice(0,index+2) : dividevalue
-						},
             setPicMake(url, width, height) {
                     let _url = '';
                     if (url.indexOf('https://wx.qlogo.cn') > -1 || url.indexOf('//wx.qlogo.cn') > -1) {
@@ -89,7 +75,7 @@
                 }
             },
             infoImg(url){
-				return handleImg.handleSingle(url, 210, 210);
+							return handleImg.handleSingle(url, 210, 210);
                 //return this.setPicAjust(url,210,280);
             },
             toDetail(recommend) {
@@ -109,7 +95,7 @@
                     window.location.href = url;
 
                 }else{
-                    this.$router.go({
+                    this.$router.push({
                         name: 'detail',
                         params: {
                             product_id: recommend.infoId

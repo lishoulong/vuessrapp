@@ -36,7 +36,7 @@ export default {
   },
   methods: {
     toSuccess() {
-      this.$router.go({
+      this.$router.push({
           name: 'success',
           params: {
             order_id: this.$route.query.orderId
@@ -48,7 +48,7 @@ export default {
       })
     },
     toDelivery () {
-      this.$router.go({
+      this.$router.push({
           name: 'delivery',
           params: {
             product_id: this.$route.query.infoId

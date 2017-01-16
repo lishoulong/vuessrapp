@@ -7,7 +7,7 @@
 			<div>{{zhijianPaySuccessInfo.paySuccessContent}}</div>
 			<div class="success-explain-action">
 		        <a v-if="zhijianPaySuccessInfo.paySuccessBtns[0].text=='咨询质检客服'" class="success-explain-action-help" href="//m.zhuanzhuan.58.com/Mzhuanzhuan/zzapp/service-issue.html">{{zhijianPaySuccessInfo.paySuccessBtns[0].text}}</a>
-		        <a v-else class="success-explain-action-help" v-link="{name: 'help'}">{{zhijianPaySuccessInfo.paySuccessBtns[0].text}}</a>
+		        <router-link v-else class="success-explain-action-help" to="{name: 'help'}">{{zhijianPaySuccessInfo.paySuccessBtns[0].text}}</router-link>
 		        <a v-if="!hideDownload" class="down active" @click="callApp" _href="//m.zhuanzhuan.58.com/Mzhuanzhuan/trade/html/app58/xz_zz.html?sale=mybuy&zhuanzhuanSourceFrom=712">{{zhijianPaySuccessInfo.paySuccessBtns[1].text}}</a>
 	        </div>
 		</div>
@@ -38,7 +38,7 @@
 		-->
 		<div class="success-order">
 			<div class="success-order-info">
-				<img :src="orderInfo.infoPics | handlePic '120' '120'" alt="">
+				<img :src="handlePic(orderInfo.infoPics,120,120)" alt="">
 				<div class="success-order-info-item">
 					<p>实付款：￥{{ orderInfo.actualPayMoney }}</p>
 					<p>收货人：{{ address.name }} <span>{{ orderInfo.userTel }}</span></p>
@@ -93,12 +93,15 @@
 			}
 		},
 		filters: {
-		    handlePic: handleImg.handleSingle
+
 
 		},
 		computed: {
 			orderId(){
 				return this.$route.params.order_id
+			},
+			handlePic(url){
+			 return	handleImg.handleSingle(url,width,height)
 			},
 			prodType(){
 				return this.$route.query.itemTypeList
@@ -110,7 +113,7 @@
 		},
 		methods:{
 			toOrderDetail() {
-				this.$router.go({
+				this.$router.push({
 					name: 'order',
 					params: {
 						order_id: this.orderId
@@ -146,7 +149,7 @@
 		},
 		route: {
 
-			activate(){
+			beforeRouteEnter(){
 				document.body.style.backgroundColor = "#eeeeee";
 				//待确定activate能否取到computed中的属性
 				if(this.prodType){
@@ -188,7 +191,7 @@
 					}
 				})
 			},
-			deactivate(){
+			beforeDestroy(){
 				document.body.style.backgroundColor = ""
 			}
 		},

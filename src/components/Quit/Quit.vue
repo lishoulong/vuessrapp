@@ -1,8 +1,10 @@
 <template>
+  <div>
     <div>
         Delete Cookie !
     </div>
-    <a v-link="{name: 'mine'}">Mine</a>
+    <router-link to="{name: 'mine'}">Mine</router-link>
+  </div>
 </template>
 <style lang="less">
 

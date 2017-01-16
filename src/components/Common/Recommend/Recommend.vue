@@ -4,7 +4,7 @@
             <dt>{{title}}</dt>
             <dd v-for="item in recommends" :id="item.infoidStr" @click="redirect(item)">
                     <div class="icon">
-                        <img :src="item.pic | pic | handlePic" />
+                        <img :src="picFilter(item.pic)" />
                         <div class="price">{{item.nowPrice | price}}</div>
                     </div>
                     <div class="title">{{item.title}}</div>
@@ -33,23 +33,25 @@
                     location.href = url;
                     return;
                 }
-                this.$router.go({
+                this.$router.push({
                     name: 'detail',
                     params: {product_id: item.infoidStr}
                 });
+            },
+            pic(urls){
+                if(!urls) return;
+                return decodeURIComponent(urls.split('|')[0]);
+            },
+            picFilter(urls){
+              return handleImg.handleSingle(this.pic(urls));
             }
         },
         filters:{
-            handlePic: handleImg.handleSingle,
             price(price){
                 return "￥" + price;
             },
             decode(url){
                 return decodeURIComponent(url);
-            },
-            pic(urls){
-                if(!urls) return;
-                return decodeURIComponent(urls.split('|')[0]);
             }
         },
         route: {

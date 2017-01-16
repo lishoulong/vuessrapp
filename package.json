@@ -4,7 +4,7 @@
   "description": "ZZ 58 app. vue+vuex+es6",
   "main": "index.js",
   "scripts": {
-    "dev": "webpack-dev-server --inline --hot --host 0.0.0.0 --port 80 --config build/webpack.dev.config.js",
+    "dev": "webpack-dev-server --inline --https --hot --host 0.0.0.0 --port 80 --config build/webpack.dev.config.js",
     "prod": "webpack --hide-modules  --config build/webpack.prod.config.js",
     "test": "test"
   },
@@ -20,14 +20,16 @@
   "author": "zhuchognyue@58ganji.com",
   "license": "ISC",
   "dependencies": {
+    "rxjs": "^5.0.2",
     "underscore": "^1.8.3",
-    "vue": "^1.0.26",
+    "vue": "^2.0.2",
     "vue-infinite-scroll": "^0.2.3",
-    "vue-lazyload": "^0.7.1",
+    "vue-lazyload": "^0.8.3",
     "vue-resource": "^0.9.3",
-    "vue-router": "^0.7.13",
-    "vue-touch": "^1.1.0",
-    "vuex": "^0.8.2"
+    "vue-router": "^2.0.0",
+    "vue-rx": "^2.2.0",
+    "vue-touch": "git://github.com/vuejs/vue-touch.git#next",
+    "vuex": "^2.0.0"
   },
   "devDependencies": {
     "babel-core": "^6.10.4",
@@ -53,7 +55,7 @@
     "url-loader": "^0.5.7",
     "vue-hot-reload-api": "^1.3.3",
     "vue-html-loader": "^1.2.3",
-    "vue-loader": "^8.5.3",
+    "vue-loader": "^9.0.0",
     "vue-style-loader": "^1.0.0",
     "webpack": "^1.13.1",
     "webpack-merge": "^0.14.0",

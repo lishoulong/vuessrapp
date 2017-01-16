@@ -1,6 +1,8 @@
 <template>
     <div class="app">
-        <router-view keep-alive></router-view>
+       <keep-alive>
+          <router-view></router-view>
+       </keep-alive>
     </div>
 </template>
 <style lang="less">
@@ -9,19 +11,17 @@
 <script type="text/javascript">
 
 	import store from './vuex/store'
-
-	import login from './mixin/login'
+  import login from './mixin/login'
 
 	import Cookies from './libs/cookie.js'
 
 	export default {
 		store,
-		mixins: [login],
+    mixins:[login],
 		created() {
-
-			if( Cookies.get("58ua") == '58app' && (!Cookies.get("uid") || !Cookies.get("PPU"))) {
-				Cookies.remove(Cookies.COOKIE_ZZU, Cookies.COOKIE_OPTION)
-			}
+			// if( Cookies.get("58ua") == '58app' && (!Cookies.get("uid") || !Cookies.get("PPU"))) {
+			// 	Cookies.remove(Cookies.COOKIE_ZZU, Cookies.COOKIE_OPTION)
+			// }
 		}
 	}
 

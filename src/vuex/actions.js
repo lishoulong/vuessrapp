@@ -1,53 +1,53 @@
 
 import * as types from './mutations-types'
 
-export const  changeDefaultAddr = ({ dispatch }, addr) => {
+export const  changeDefaultAddr = (context, addr) => {
 
-	dispatch(types.CHANGE_DEFAUTL_ADDR, addr)
-
-}
-
-export const selectCity = ({ dispatch }, city) => {
-
-	dispatch(types.SELECT_CITY, city)
+	context.commit(types.CHANGE_DEFAUTL_ADDR, addr)
 
 }
 
-export const selectArea = ({ dispatch }, area) => {
+export const selectCity = (context, city) => {
 
-	dispatch(types.SELECT_AREA, area)
+	context.commit(types.SELECT_CITY, city)
 
-}
-
-export const changeDefaultAddrCityArea = ({ dispatch }, cityArea) => {
-	dispatch(types.CHANGE_DEFAUTL_ADDR_CITY_AREA, cityArea)
 }
 
-export const changeRedirect = ({ dispatch }, redirectInfo) => {
-	dispatch(types.CHANGE_REDIRECT, redirectInfo)
+export const selectArea = (context, area) => {
+
+	context.commit(types.SELECT_AREA, area)
+
 }
 
-export const setChatList = ({ dispatch }, chatList) => {
-	dispatch(types.SET_CHATLIST, chatList)
+export const changeDefaultAddrCityArea = (context, cityArea) => {
+	context.commit(types.CHANGE_DEFAUTL_ADDR_CITY_AREA, cityArea)
 }
 
-export const changeDefaultAddrMobile = ({ dispatch }, mobile) => {
-	dispatch(types.CHANGE_DEFAUTL_ADDR_MOBILE, mobile)
+export const changeRedirect = (context, redirectInfo) => {
+	context.commit(types.CHANGE_REDIRECT, redirectInfo)
 }
 
-export const changeDefaultAddrName = ({ dispatch }, name) => {
-	dispatch(types.CHANGE_DEFAUTL_ADDR_NAME, name)
+export const setChatList = (context, chatList) => {
+	context.commit(types.SET_CHATLIST, chatList)
 }
 
-export const changeDefaultAddrDetail  = ({ dispatch }, detail) => {
-	dispatch(types.CHANGE_DEFAUTL_ADDR_DETAIL, detail)
+export const changeDefaultAddrMobile = (context, mobile) => {
+	context.commit(types.CHANGE_DEFAUTL_ADDR_MOBILE, mobile)
 }
-export const setSystemList = ({ dispatch }, systemList) => {
-	dispatch(types.SET_SYSTEMLIST, systemList)
+
+export const changeDefaultAddrName = (context, name) => {
+	context.commit(types.CHANGE_DEFAUTL_ADDR_NAME, name)
 }
-export const changeOrderId = ({dispatch}, orderName) => {
-	dispatch(types.CHANGE_ORDERID, orderName)
+
+export const changeDefaultAddrDetail  = (context, detail) => {
+	context.commit(types.CHANGE_DEFAUTL_ADDR_DETAIL, detail)
 }
-export const changePayType = ({dispatch}, payValue) => {
-	dispatch(types.CHANGE_PAYTYPE, payValue)
+export const setSystemList = (context, systemList) => {
+	context.commit(types.SET_SYSTEMLIST, systemList)
+}
+export const changeOrderId = (context, orderName) => {
+	context.commit(types.CHANGE_ORDERID, orderName)
+}
+export const changePayType = (context, payValue) => {
+	context.commit(types.CHANGE_PAYTYPE, payValue)
 }

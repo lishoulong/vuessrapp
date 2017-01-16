@@ -7,7 +7,7 @@
 		    <img src="./img/no_system_msg.png">
 		    <p>暂无系统消息</p>
 		</div>
-		
+
 	</div>
 </template>
 <style lang="less">
@@ -60,7 +60,7 @@
 						this.loading = false;
 					}
 				})
-				
+
 			},
 			setHeader(){
 				Native.setTitle({ title: "系统消息" });
@@ -74,14 +74,14 @@
 			'message-item': MessageItem
 		},
 		route: {
-			activate(){
+			beforeRouteEnter(){
 				document.body.style.backgroundColor="#f1f2f6"
 			},
 			data(){
 				this.list = this.systemList[ Cookies.getUID() ] || [];
 				this.setHeader();
 			},
-			deactivate(){
+			beforeDestroy(){
 				document.body.style.backgroundColor=""
 			}
 		}

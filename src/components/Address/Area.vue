@@ -45,7 +45,7 @@ export default {
 			this.selectArea(area);
 			this.changeDefaultAddrCityArea(this.selectedInfo);
 			window.history.go(-2);
-			
+
 		}
 	},
 	route: {
@@ -58,10 +58,10 @@ export default {
 				}
 			})
 		},
-		activate() {
+		beforeRouteEnter() {
 		    document.body.style.backgroundColor = "#eeeeee";
 		},
-		deactivate() {
+		beforeDestroy() {
 		    document.body.style.backgroundColor = "";
 		}
 	}

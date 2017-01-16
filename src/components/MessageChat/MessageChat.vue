@@ -11,8 +11,7 @@
 	import Cookie from '../../libs/cookie';
 	import * as Api from '../../libs/data-api'
 	import * as Chat from "../../libs/chat";
-	import {setChatList, setSystemList} from "../../vuex/actions";
-	import { chatList, systemList } from '../../vuex/getters'
+	import { mapGetters } from 'vuex'
 
 	import MessageItem from '../Common/MessageItem/MessageItem.vue';
 	import Native from '../../libs/native.js'
@@ -30,13 +29,11 @@
 				uid: Cookie.getUID()
 			};
 		},
-		vuex: {
-			actions: {
-				setChatList, setSystemList
-			},
-			getters: {
-				chatList, systemList
-			}
+		computed:{
+			...mapGetters({
+				chatList:'chatList',
+				systemList:'systemList'
+			})
 		},
 		methods: {
 			getLastContacts(resp, cb){
@@ -97,7 +94,7 @@
 					chats = {};
 					chats[this.uid] = oldChatList;
 				}
-				this.setChatList(chats);
+				this.$store.dispatch('setChatList',chats);
 
 				cb && cb(chats);
 				return chats;
@@ -114,7 +111,7 @@
 					}
 				});
 				systemList[this.uid] = newSystemList.concat(oldSystemList);
-				this.setSystemList(systems);
+				this.$store.dispatch('setSystemList',systems);
 
 				cb && cb(systemList);
 				return systemList;
@@ -148,37 +145,38 @@
 		components: {
 			'message-item': MessageItem
 		},
-		route: {
-			data(){
+		beforeRouteEnter(to, from, next){
+			next(vm => {
+				console.log(vm);
 				Native.setTitle({ title: "私信" });
 				Native.setWebLog({
 					actiontype : "talk",
-        			pagetype: "zzmine"
+							pagetype: "zzmine"
 				});
 				Chat.login().then(resp => {
 					const params = {
-						pagenum: this.pagenum,
-						pagesize: this.pagesize
+						pagenum: vm.pagenum,
+						pagesize: vm.pagesize
 					};
 					return Chat.getlastcontacts(params);
 				}).then(resp => {
-					return this.getLastContacts(resp, (users) => {
+					return vm.getLastContacts(resp, (users) => {
 						let ids = _.map(users, user => user.uid);
 						return Api.getNickNameAndPhoto({userids: ids.join(",")});
 					});
 				}).then(resp => {
 
-					return this.getNickNameAndPhoto(resp, () => {
+					return vm.getNickNameAndPhoto(resp, () => {
 						return Chat.msg_offline({
-							start_time:this.start_time,
-							start_id:this.start_id,
+							start_time:vm.start_time,
+							start_id:vm.start_id,
 							msgtype:10
 						}).then((resp) => {
-							return this.msg_offline(resp);
+							return vm.msg_offline(resp);
 						});
 					});
-				});
-			}
+			 	});
+			})
 		}
 	}
 
